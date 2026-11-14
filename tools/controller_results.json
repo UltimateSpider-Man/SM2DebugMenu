@@ -1,0 +1,35 @@
+{
+    "schema":  1,
+    "preview_build":  false,
+    "generated_at_utc":  "2026-11-11T18:54:27.0684668Z",
+    "source_sha256":  "5857c41dee15ab1053bb1e54317d20eb942c00a2828f5142f36039a727843952",
+    "header_sha256":  "1beeeda896c2dbe3d28b03a614def58a3c761e755afba5f90fb6b413ee6e0c5b",
+    "test_sha256":  "0b3c184cb1a064479292310c15d9546d371271fd195345cb621d5d33d2b2891a",
+    "deterministic":  {
+                          "mode":  "deterministic_tests",
+                          "checks":  381,
+                          "failed":  0,
+                          "passed":  true
+                      },
+    "read_only_hardware":  {
+                               "mode":  "read_only_hid_probe",
+                               "duration_ms":  3100,
+                               "enumerations":  2,
+                               "sony_candidates":  1,
+                               "opened_devices":  1,
+                               "active_devices":  1,
+                               "reports_parsed":  772,
+                               "malformed_reports":  0,
+                               "read_errors":  0,
+                               "pending_reads":  1,
+                               "max_poll_us":  1057,
+                               "queued_menu_actions":  0,
+                               "after_shutdown_active":  0,
+                               "after_shutdown_retiring":  0,
+                               "products":  [
+                                                "0ce6"
+                                            ]
+                           },
+    "physical_ps_button_tested":  false,
+    "game_launched":  false
+}
