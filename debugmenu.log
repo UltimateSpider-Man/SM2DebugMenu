@@ -1,0 +1,909 @@
+400452796 Preview started; gameplay disabled.
+400491437 Preview started; gameplay disabled.
+400556640 Preview started; gameplay disabled.
+400556796 Menu shut down.
+400727890 Preview started; gameplay disabled.
+400728046 Menu shut down.
+400772046 Debug menu initialized.
+400772171 Game window dispatch ready; engine calls are restricted to that window's thread.
+400923453 Checking executable SHA256; no engine access before compatibility passes.
+400924140 A required signature is missing, ambiguous, or not a function start.
+400924140 Debug menu initialized.
+401039734 Checking executable SHA256; no engine access before compatibility passes.
+401040375 Core signatures verified against the supported retail build.
+401040375 Debug menu initialized.
+401486343 Checking executable SHA256; no engine access before compatibility passes.
+401487000 Core signatures verified against the supported retail build.
+401487000 Debug menu initialized.
+1984875 Checking executable SHA256; no engine access before compatibility passes.
+1985515 Core signatures verified against the supported retail build.
+1985515 Debug menu initialized.
+2240046 Checking executable SHA256; no engine access before compatibility passes.
+2240703 Core signatures verified against the supported retail build.
+2240703 Debug menu initialized.
+2492890 Checking executable SHA256; no engine access before compatibility passes.
+2493562 Core signatures verified against the supported retail build.
+2493562 Debug menu initialized.
+2968656 Checking executable SHA256; no engine access before compatibility passes.
+2969312 Core signatures verified against the supported retail build.
+2969312 Debug menu initialized.
+2970000 Game window dispatch ready; engine calls are restricted to that window's thread.
+3116671 Game window dispatch ready; engine calls are restricted to that window's thread.
+8281578 Checking executable SHA256; no engine access before compatibility passes.
+8282234 Core signatures verified against the supported retail build.
+8282234 Debug menu initialized.
+8283234 Game window dispatch ready; engine calls are restricted to that window's thread.
+8292968 Game window dispatch ready; engine calls are restricted to that window's thread.
+8677546 Checking executable SHA256; no engine access before compatibility passes.
+8678171 Core signatures verified against the supported retail build.
+8678171 Debug menu initialized.
+8679703 Game window dispatch ready; engine calls are restricted to that window's thread.
+8694468 Game window dispatch ready; engine calls are restricted to that window's thread.
+9043015 Checking executable SHA256; no engine access before compatibility passes.
+9044156 Core signatures verified against the supported retail build.
+9044156 Debug menu initialized.
+9057203 Checking executable SHA256; no engine access before compatibility passes.
+9057843 Core signatures verified against the supported retail build.
+9057843 Debug menu initialized.
+9058187 Game window dispatch ready; engine calls are restricted to that window's thread.
+9060046 Game window dispatch ready; engine calls are restricted to that window's thread.
+9430375 Checking executable SHA256; no engine access before compatibility passes.
+9431015 Core signatures verified against the supported retail build.
+9431015 Debug menu initialized.
+9432125 Game window dispatch ready; engine calls are restricted to that window's thread.
+9436390 Game window dispatch ready; engine calls are restricted to that window's thread.
+9669187 Checking executable SHA256; no engine access before compatibility passes.
+9669843 Core signatures verified against the supported retail build.
+9669843 Debug menu initialized.
+9671484 Game window dispatch ready; engine calls are restricted to that window's thread.
+9673890 Game window dispatch ready; engine calls are restricted to that window's thread.
+10667812 Preview started; gameplay disabled.
+10672171 Menu shut down.
+10923796 Preview started; gameplay disabled.
+10927875 Menu shut down.
+10928140 Preview started; gameplay disabled.
+10932375 Menu shut down.
+11015734 Checking executable SHA256; no engine access before compatibility passes.
+11016406 Core signatures verified against the supported retail build.
+11016406 Debug menu initialized.
+11016734 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+11889890 Checking executable SHA256; no engine access before compatibility passes.
+11890546 Core signatures verified against the supported retail build.
+11890546 Debug menu initialized.
+11891421 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+11898640 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+12096562 Preview started; gameplay disabled.
+12111109 Menu shut down.
+12114406 Debug menu initialized.
+12114406 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+12590468 Preview started; gameplay disabled.
+12590546 Preview started; gameplay disabled.
+12594468 Menu shut down.
+12597750 Menu shut down.
+12761281 Preview started; gameplay disabled.
+12766015 Menu shut down.
+12766671 Preview started; gameplay disabled.
+12771625 Menu shut down.
+12824687 Preview started; gameplay disabled.
+12874750 Checking executable SHA256; no engine access before compatibility passes.
+12875421 Core signatures verified against the supported retail build.
+12875421 Debug menu initialized.
+12876953 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+12882875 Menu shut down.
+13585718 Checking executable SHA256; no engine access before compatibility passes.
+13586390 Core signatures verified against the supported retail build.
+13586390 Debug menu initialized.
+13587156 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+13588578 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+13596750 Checking executable SHA256; no engine access before compatibility passes.
+13597406 Core signatures verified against the supported retail build.
+13597406 Debug menu initialized.
+13598281 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+13600140 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+13615390 Checking executable SHA256; no engine access before compatibility passes.
+13616046 Core signatures verified against the supported retail build.
+13616046 Debug menu initialized.
+13616921 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+13618562 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+16712828 Preview started; gameplay disabled.
+16724468 Menu shut down.
+20070265 Preview started; gameplay disabled.
+20076750 Menu shut down.
+21494531 Preview started; gameplay disabled.
+21517671 Menu shut down.
+21624125 Checking executable SHA256; no engine access before compatibility passes.
+21624796 Core signatures verified against the supported retail build.
+21624796 Debug menu initialized.
+21625156 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+21626984 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+22037140 Checking executable SHA256; no engine access before compatibility passes.
+22037843 Core signatures verified against the supported retail build.
+22037843 Debug menu initialized.
+22039156 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+22052703 Checking executable SHA256; no engine access before compatibility passes.
+22053437 Core signatures verified against the supported retail build.
+22053437 Debug menu initialized.
+22054421 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+22067765 Preview started; gameplay disabled.
+22070375 Menu shut down.
+22079906 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+22231468 Checking executable SHA256; no engine access before compatibility passes.
+22232125 Core signatures verified against the supported retail build.
+22232125 Debug menu initialized.
+22233218 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+22240328 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+22393640 Checking executable SHA256; no engine access before compatibility passes.
+22394343 Core signatures verified against the supported retail build.
+22394343 Debug menu initialized.
+22395671 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+22399812 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+22544171 Checking executable SHA256; no engine access before compatibility passes.
+22544828 Core signatures verified against the supported retail build.
+22545156 Debug menu initialized.
+22546484 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+22552593 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+22559203 Verified main-engine callback registered; native operations are confined to its scope.
+23252843 Checking executable SHA256; no engine access before compatibility passes.
+23253500 Core signatures verified against the supported retail build.
+23253765 Debug menu initialized.
+23254546 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+23258687 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+23265140 Verified main-engine callback registered; native operations are confined to its scope.
+23802453 Checking executable SHA256; no engine access before compatibility passes.
+23803109 Core signatures verified against the supported retail build.
+23803390 Debug menu initialized.
+23805109 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+24027234 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+24037296 Verified main-engine callback registered; native operations are confined to its scope.
+24446843 Preview started; gameplay disabled.
+24524125 Menu shut down.
+24873671 Preview started; gameplay disabled.
+24876578 Menu shut down.
+25080937 Checking executable SHA256; no engine access before compatibility passes.
+25081609 Core signatures verified against the supported retail build.
+25081875 Debug menu initialized.
+25082750 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+25090515 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+25099265 Verified main-engine callback registered; native operations are confined to its scope.
+25875375 Preview started; gameplay disabled.
+25963125 Menu shut down.
+26650078 Preview started; gameplay disabled.
+26659312 Menu shut down.
+27326000 Preview started; gameplay disabled.
+27335828 Menu shut down.
+27342046 Debug menu initialized.
+27342046 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+27342046 Reload runtime: Reload runtime has not initialized [checkpoints=0]
+27529718 Checking executable SHA256; no engine access before compatibility passes.
+27530406 Core signatures verified against the supported retail build.
+27530671 Debug menu initialized.
+27531437 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+27531437 Reload runtime: Reload unavailable for this executable or native binding [checkpoints=0]
+27538328 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+27547515 Verified main-engine callback registered; native operations are confined to its scope.
+3595781 Checking executable SHA256; no engine access before compatibility passes.
+3596515 Core signatures verified against the supported retail build.
+3596796 Debug menu initialized.
+3599203 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+3599203 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+3604125 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+4022671 Checking executable SHA256; no engine access before compatibility passes.
+4023406 Core signatures verified against the supported retail build.
+4023687 Debug menu initialized.
+4024562 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+4024562 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4031671 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+4041406 Verified main-engine callback registered; native operations are confined to its scope.
+6050046 Preview started; gameplay disabled.
+6057031 Menu shut down.
+6762484 Preview started; gameplay disabled.
+6801406 Menu shut down.
+6963765 Checking executable SHA256; no engine access before compatibility passes.
+6964453 Core signatures verified against the supported retail build.
+6964718 Debug menu initialized.
+6966687 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+6966687 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6978500 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+6987031 Verified main-engine callback registered; native operations are confined to its scope.
+7021453 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+7060843 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+7076390 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+7077781 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+7078390 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+7088265 ReloadCheckpoint: native request accepted.
+7088296 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+7092609 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+7092859 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+7093484 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+7093593 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+7094203 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+7095734 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+7096375 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+7117812 FullReload: native request accepted.
+7117828 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+7129640 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+7143421 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+7143984 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+7166437 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+7167031 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+7167500 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+7168078 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+7168687 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+7169281 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+7169765 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+7170453 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+7170562 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+7171140 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+7181812 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+7182671 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+7184093 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+7184656 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+7187890 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+7188609 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+7189953 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+7190718 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+7207796 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+7208406 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+7264750 Preview started; gameplay disabled.
+7279062 Menu shut down.
+11769406 Checking executable SHA256; no engine access before compatibility passes.
+11770109 Core signatures verified against the supported retail build.
+11770390 Debug menu initialized.
+11770718 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+11770718 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+11787046 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+11796468 Verified main-engine callback registered; native operations are confined to its scope.
+11818203 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+11833031 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+11844734 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+11930906 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+11931515 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+11931640 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+11932453 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+12203781 Checking executable SHA256; no engine access before compatibility passes.
+12204484 Core signatures verified against the supported retail build.
+12204750 Debug menu initialized.
+12205515 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+12205515 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+12225531 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+12231984 Verified main-engine callback registered; native operations are confined to its scope.
+12258906 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+12279562 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+12295171 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+12352890 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+12353593 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+14175171 Checking executable SHA256; no engine access before compatibility passes.
+14175875 Core signatures verified against the supported retail build.
+14176125 Debug menu initialized.
+14177984 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+14178000 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+14186296 Verified main-engine callback registered; native operations are confined to its scope.
+14214328 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+14222437 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+14234406 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+14260031 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+14260656 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+16535484 Preview started; gameplay disabled.
+16549234 Checking executable SHA256; no engine access before compatibility passes.
+16549937 Core signatures verified against the supported retail build.
+16550218 Debug menu initialized.
+16552187 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+16552187 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+16555906 Menu shut down.
+16564765 Verified main-engine callback registered; native operations are confined to its scope.
+16598796 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+16610609 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+16622328 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+16702015 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+16702625 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+16704906 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+16705515 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+16708703 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+16709296 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+18250625 Checking executable SHA256; no engine access before compatibility passes.
+18251296 Core signatures verified against the supported retail build.
+18251562 Debug menu initialized.
+18252328 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+18252328 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+18260312 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+18270046 Verified main-engine callback registered; native operations are confined to its scope.
+18270062 Native photo-mode entry gate verified and installed; Debug/Dev visibility blocks Open.
+18297546 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+18316125 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+18327796 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+18361531 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+18362109 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+18364656 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+18365375 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+18365875 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+18366640 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+18393468 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+18394078 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+18394218 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+18394875 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+18395218 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+18395812 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+18396078 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+18396656 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+18420031 FullReload: native request accepted.
+18420062 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+18430203 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+18431546 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+18432265 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+18432515 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+18433265 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+18438687 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+18439265 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+18439765 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+18440375 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+18440734 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+18441281 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+18450093 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+18450625 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+18455078 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+18455625 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+18467484 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+18468109 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+20257937 Checking executable SHA256; no engine access before compatibility passes.
+20258593 Core signatures verified against the supported retail build.
+20258875 Debug menu initialized.
+20259765 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+20259765 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+20270359 Verified main-engine callback registered; native operations are confined to its scope.
+20270953 Native photo-mode entry gate verified and installed; Debug/Dev visibility blocks Open.
+20341390 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+20351953 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+20364796 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+20392359 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+20393234 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+1243515 Preview started; gameplay disabled.
+1520062 Menu shut down.
+2016468 Preview started; gameplay disabled.
+2020593 Menu shut down.
+2020937 Preview started; gameplay disabled.
+2025171 Menu shut down.
+3121609 Checking executable SHA256; no engine access before compatibility passes.
+3122265 Core signatures verified against the supported retail build.
+3122531 Debug menu initialized.
+3124390 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+3124390 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+3127093 Preview started; gameplay disabled.
+3154312 Menu shut down.
+3156546 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+3167703 Verified main-engine callback registered; native operations are confined to its scope.
+3167703 Native photo-mode entry gate verified and installed; Debug/Dev visibility blocks Open.
+3197390 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+3209109 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+3219609 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+3281703 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+3282296 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+3328734 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+3329328 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+3331656 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+3332250 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+3334890 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+3335484 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+3336781 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+3337375 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+3347343 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+3347937 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+3374312 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+3374906 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+3433796 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+3434406 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+3438171 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+3438765 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+3447765 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+3448359 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+3453140 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+3453734 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+3464296 ExitFrontend: native request accepted.
+3464328 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+3481140 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+3492125 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+3502234 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4259671 Preview started; gameplay disabled.
+4263859 Menu shut down.
+4264203 Preview started; gameplay disabled.
+4268500 Menu shut down.
+4392781 Checking executable SHA256; no engine access before compatibility passes.
+4393421 Core signatures verified against the supported retail build.
+4393671 Debug menu initialized.
+4394546 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+4394546 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4396296 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+4406359 Verified main-engine callback registered; native operations are confined to its scope.
+4406843 Native photo-mode entry gate verified and installed; Debug/Dev visibility blocks Open.
+4433687 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4443515 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4454781 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5029125 Preview started; gameplay disabled.
+5033265 Menu shut down.
+5033625 Preview started; gameplay disabled.
+5037875 Menu shut down.
+5158031 Preview started; gameplay disabled.
+5208468 Menu shut down.
+5306734 Checking executable SHA256; no engine access before compatibility passes.
+5307390 Core signatures verified against the supported retail build.
+5307640 Debug menu initialized.
+5308843 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+5308843 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5322734 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+5329187 Verified main-engine callback registered; native operations are confined to its scope.
+5329406 Native photo-mode entry gate verified and installed; Debug/Dev visibility blocks Open.
+5352546 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5356750 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5367781 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5461843 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5462421 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5468156 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5468859 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5798000 Preview started; gameplay disabled.
+5802187 Menu shut down.
+5802546 Preview started; gameplay disabled.
+5806812 Menu shut down.
+5832765 Preview started; gameplay disabled.
+5861828 Menu shut down.
+5918734 Checking executable SHA256; no engine access before compatibility passes.
+5919375 Core signatures verified against the supported retail build.
+5919625 Debug menu initialized.
+5920390 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+5920390 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5922578 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+5929140 Verified main-engine callback registered; native operations are confined to its scope.
+5929437 Native photo-mode entry gate verified and installed; Debug/Dev visibility blocks Open.
+5957156 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5998984 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6014609 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6029312 ReloadCheckpoint: native request accepted.
+6029343 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6031921 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6033062 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6033625 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6033734 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6034906 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6095921 FullReload: native request accepted.
+6095953 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6106234 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6109453 ReloadCheckpoint: native request accepted.
+6109484 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6111750 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6112218 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6112781 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6119531 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6120125 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6128093 ReloadCheckpoint: native request accepted.
+6128109 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6132875 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6189109 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6189656 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6216437 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6216968 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6217187 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6217734 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6218312 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6218843 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6221203 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6221734 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6237218 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6237750 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6240390 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6240937 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6258046 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6258578 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6278703 ReloadCheckpoint: native request accepted.
+6278734 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6283421 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6283546 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6285406 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6302406 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6302968 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6303218 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6303781 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6303921 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6304484 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6304953 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6305625 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6306796 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6307343 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6312062 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6312625 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6332312 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6332859 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6334093 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6334750 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6335781 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6336421 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6338937 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6339484 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6439437 Preview started; gameplay disabled.
+6449093 Menu shut down.
+1113984 Preview started; gameplay disabled.
+1119281 Menu shut down.
+1119765 Preview started; gameplay disabled.
+1124125 Menu shut down.
+2331468 Preview started; gameplay disabled.
+2335671 Menu shut down.
+2336015 Preview started; gameplay disabled.
+2340453 Menu shut down.
+2398953 Preview started; gameplay disabled.
+2448687 Menu shut down.
+2575703 Checking executable SHA256; no engine access before compatibility passes.
+2576406 Core signatures verified against the supported retail build.
+2576687 Debug menu initialized.
+2576796 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+2576796 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+2592765 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+2600421 Verified main-engine callback registered; native operations are confined to its scope.
+2600421 Native photo-mode entry gate verified and installed; Debug/Dev visibility blocks Open.
+2639343 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+2665250 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+2681875 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+2695656 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+2696375 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+2886687 Checking executable SHA256; no engine access before compatibility passes.
+2887343 Core signatures verified against the supported retail build.
+2887609 Debug menu initialized.
+2888265 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+2888265 Sony SDK input capture installed; Debug/Dev visibility blocks hero controls.
+2888265 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4011687 Checking executable SHA256; no engine access before compatibility passes.
+4012375 Core signatures verified against the supported retail build.
+4012640 Debug menu initialized.
+4012640 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+4012640 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4042937 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+4063281 Verified main-engine callback registered; native operations are confined to its scope.
+4063578 Native photo-mode entry gate verified and installed; Debug/Dev visibility blocks Open.
+4084640 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4178875 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4188968 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4199781 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4200515 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4200750 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4201500 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4208921 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4209531 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4209953 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4210703 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4212828 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4213562 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4217234 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4218015 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4220312 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4220921 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4380359 Checking executable SHA256; no engine access before compatibility passes.
+4381015 Core signatures verified against the supported retail build.
+4381281 Debug menu initialized.
+4381937 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+4381937 Sony SDK input capture installed; Debug/Dev visibility blocks hero controls.
+4381937 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4408734 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+4415078 Verified main-engine callback registered; native operations are confined to its scope.
+4415390 Native photo-mode entry gate verified and installed; Debug/Dev visibility blocks Open.
+4445656 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4719546 Checking executable SHA256; no engine access before compatibility passes.
+4720203 Core signatures verified against the supported retail build.
+4720531 Debug menu initialized.
+4721515 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+4721515 Sony SDK input capture installed; Debug/Dev visibility blocks hero controls.
+4721531 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4736390 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+4743609 Verified main-engine callback registered; native operations are confined to its scope.
+4743921 Native photo-mode entry gate verified and installed; Debug/Dev visibility blocks Open.
+4766140 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4801703 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4811578 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4873031 FullReload: native request accepted.
+4873046 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4873062 FullReload: request rejected.
+4884250 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4901750 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4902328 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4903890 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4904453 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4912093 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4912656 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4912875 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4913437 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4917859 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4918437 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4926437 FullReload: native request accepted.
+4926468 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4936890 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4939218 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4939765 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4946281 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4946843 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+4947187 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+4947968 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5135515 Preview started; gameplay disabled.
+5186890 Menu shut down.
+6815953 Preview started; gameplay disabled.
+6820265 Menu shut down.
+6820609 Preview started; gameplay disabled.
+6825046 Menu shut down.
+7058468 Preview started; gameplay disabled.
+7182171 Menu shut down.
+13798593 Preview started; gameplay disabled.
+13802906 Menu shut down.
+13803312 Preview started; gameplay disabled.
+13807812 Menu shut down.
+1952031 Checking executable SHA256; no engine access before compatibility passes.
+1952687 Core signatures verified against the supported retail build.
+1952984 Debug menu initialized.
+1934171 Checking executable SHA256; no engine access before compatibility passes.
+1934812 Core signatures verified against the supported retail build.
+1935062 Debug menu initialized.
+4716593 Preview started; gameplay disabled.
+4716593 Menu shut down.
+5079687 Preview started; gameplay disabled.
+5083265 Menu shut down.
+5083546 Preview started; gameplay disabled.
+5086984 Menu shut down.
+5140265 Checking executable SHA256; no engine access before compatibility passes.
+5140921 Core signatures verified against the supported retail build.
+5141203 Debug menu initialized.
+5142093 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+5142093 Sony SDK input capture installed; Debug/Dev visibility blocks hero controls.
+5142093 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5145703 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+5149640 Verified main-engine callback registered; native operations are confined to its scope.
+5150609 Native photo-mode entry gate verified and installed; Debug/Dev visibility blocks Open.
+5172687 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5183578 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5204562 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5204937 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5205734 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5209187 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5209921 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5210281 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5211015 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5211203 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5212000 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5283468 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5284218 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5286437 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5287421 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5296015 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5296875 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5330578 FullReload: native request accepted.
+5330609 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5344906 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5349234 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5349906 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5350359 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5351031 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5387109 FullReload: native request accepted.
+5387125 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5401453 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5405656 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5406500 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5406765 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5407531 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5412921 FullReload: native request accepted.
+5412937 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5438515 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5442859 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5443593 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5443718 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5444453 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5501046 CompletePrimary: native completion requested.
+5501687 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5502515 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5502593 CompletePrimary: native completion requested.
+5502625 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5503343 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5523406 ReloadCheckpoint: native request accepted.
+5523437 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5532546 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5532671 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5537109 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5539234 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5540296 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5541531 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5542921 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5556234 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5557375 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5557500 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5559203 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5559453 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5566015 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5597343 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5598046 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+5602062 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+5602906 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6039781 Checking executable SHA256; no engine access before compatibility passes.
+6040453 Core signatures verified against the supported retail build.
+6040750 Debug menu initialized.
+6042187 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+6042187 Sony SDK input capture installed; Debug/Dev visibility blocks hero controls.
+6042187 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6046890 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+6050390 Verified main-engine callback registered; native operations are confined to its scope.
+6050515 Native photo-mode entry gate verified and installed; Debug/Dev visibility blocks Open.
+6073046 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6083468 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6095359 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6833359 Checking executable SHA256; no engine access before compatibility passes.
+6834015 Core signatures verified against the supported retail build.
+6834343 Debug menu initialized.
+6835109 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+6835109 Sony SDK input capture installed; Debug/Dev visibility blocks hero controls.
+6835109 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6840906 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+6843968 Verified main-engine callback registered; native operations are confined to its scope.
+6844906 Native photo-mode entry gate verified and installed; Debug/Dev visibility blocks Open.
+6867062 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6883765 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6894984 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6927656 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6928765 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+6933171 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+6934265 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+7983609 Checking executable SHA256; no engine access before compatibility passes.
+7985109 Core signatures verified against the supported retail build.
+7985750 Debug menu initialized.
+8011593 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+8011593 Sony SDK input capture installed; Debug/Dev visibility blocks hero controls.
+8011593 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+8018046 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+8021218 Verified main-engine callback registered; native operations are confined to its scope.
+8021765 Native photo-mode entry gate verified and installed; Debug/Dev visibility blocks Open.
+8084531 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+8949843 Checking executable SHA256; no engine access before compatibility passes.
+8950484 Core signatures verified against the supported retail build.
+8950843 Debug menu initialized.
+8951609 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+8951609 Sony SDK input capture installed; Debug/Dev visibility blocks hero controls.
+8955218 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+8957953 Verified main-engine callback registered; native operations are confined to its scope.
+8958843 Native photo-mode entry gate verified and installed; Debug/Dev visibility blocks Open.
+9031593 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+9112875 ReloadCheckpoint: native request accepted.
+9112890 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+9189203 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+10129500 M2 flame: native additive equip request dispatched.
+10131546 M2 flame: native additive equip request dispatched.
+10131671 M2 flame: native additive equip request dispatched.
+10132390 M2 flame: native additive equip request dispatched.
+10132468 M2 flame: native additive equip request dispatched.
+10132593 M2 flame: native additive equip request dispatched.
+10132687 M2 flame: native additive equip request dispatched.
+10187062 ReloadCheckpoint: native request accepted.
+10187093 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+10204843 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+10254906 ReloadCheckpoint: native request accepted.
+10255015 Reload runtime: Waiting for a stable loaded world [checkpoints=0]
+10306562 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+10317000 M2 flame: native additive equip request dispatched.
+10321171 M2 flame: native additive equip request dispatched.
+10321906 M2 flame: native additive equip request dispatched.
+10322046 M2 flame: native additive equip request dispatched.
+10322859 M2 flame: native additive equip request dispatched.
+10322906 M2 flame: native additive equip request dispatched.
+10323031 M2 flame: native additive equip request dispatched.
+10323156 M2 flame: native additive equip request dispatched.
+10323921 M2 flame: native additive equip request dispatched.
+10324062 M2 flame: native additive equip request dispatched.
+10324140 M2 flame: native additive equip request dispatched.
+10324906 M2 flame: native additive equip request dispatched.
+10329953 M2 flame: native additive equip request dispatched.
+10330078 M2 flame: native additive equip request dispatched.
+10331906 M2 flame: native additive equip request dispatched.
+10331968 M2 flame: native additive equip request dispatched.
+10332093 M2 flame: native additive equip request dispatched.
+10333093 M2 flame: native additive equip request dispatched.
+10333218 M2 flame: native additive equip request dispatched.
+10334031 M2 flame: native additive equip request dispatched.
+10338187 M2 flame: native additive equip request dispatched.
+10363140 M2 flame: native additive equip request dispatched.
+10364328 M2 flame: native additive equip request dispatched.
+10365171 M2 flame: native additive equip request dispatched.
+10365296 M2 flame: native additive equip request dispatched.
+10365421 M2 flame: native additive equip request dispatched.
+10366140 M2 flame: native additive equip request dispatched.
+10634984 Checking executable SHA256; no engine access before compatibility passes.
+10636531 Core signatures verified against the supported retail build.
+10637515 Debug menu initialized.
+10658703 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+10658703 Sony SDK input capture installed; Debug/Dev visibility blocks hero controls.
+10675109 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+10678609 Verified main-engine callback registered; native operations are confined to its scope.
+10678812 Native photo-mode entry gate verified and installed; Debug/Dev visibility blocks Open.
+10757437 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+10764906 M2 flame: native additive equip request dispatched.
+10766703 M2 flame: native additive equip request dispatched.
+10766765 M2 flame: native additive equip request dispatched.
+10766890 M2 flame: native additive equip request dispatched.
+10767609 M2 flame: native additive equip request dispatched.
+10767750 M2 flame: native additive equip request dispatched.
+10767859 M2 flame: native additive equip request dispatched.
+10768578 M2 flame: native additive equip request dispatched.
+10768640 M2 flame: native additive equip request dispatched.
+10768750 M2 flame: native additive equip request dispatched.
+10769000 M2 flame: native additive equip request dispatched.
+10769703 M2 flame: native additive equip request dispatched.
+10769750 M2 flame: native additive equip request dispatched.
+10769875 M2 flame: native additive equip request dispatched.
+10770031 M2 flame: native additive equip request dispatched.
+10772968 M2 flame: native additive equip request dispatched.
+10773109 M2 flame: native additive equip request dispatched.
+10773796 M2 flame: native additive equip request dispatched.
+10784125 M2 flame: native additive equip request dispatched.
+10786125 M2 flame: native additive equip request dispatched.
+10787046 M2 flame: native additive equip request dispatched.
+10787343 M2 flame: native additive equip request dispatched.
+10788125 M2 flame: native additive equip request dispatched.
+10788203 M2 flame: native additive equip request dispatched.
+10788343 M2 flame: native additive equip request dispatched.
+10788453 M2 flame: native additive equip request dispatched.
+10789203 M2 flame: native additive equip request dispatched.
+10789343 M2 flame: native additive equip request dispatched.
+10789437 M2 flame: native additive equip request dispatched.
+10789562 M2 flame: native additive equip request dispatched.
+10790343 M2 flame: native additive equip request dispatched.
+10790531 M2 flame: native additive equip request dispatched.
+10790640 M2 flame: native additive equip request dispatched.
+10801765 M2 flame: native additive equip request dispatched.
+10869406 Checking executable SHA256; no engine access before compatibility passes.
+10870109 Core signatures verified against the supported retail build.
+10870937 Debug menu initialized.
+10906843 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+10906843 Sony SDK input capture installed; Debug/Dev visibility blocks hero controls.
+10923140 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+10959125 Verified main-engine callback registered; native operations are confined to its scope.
+10959984 Native photo-mode entry gate verified and installed; Debug/Dev visibility blocks Open.
+11005656 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+11029765 M2 flame: native additive equip request dispatched.
+11038265 M2 flame: native additive equip request dispatched.
+11038343 M2 flame: native additive equip request dispatched.
+11039234 M2 flame: native additive equip request dispatched.
+11039296 M2 flame: native additive equip request dispatched.
+11039421 M2 flame: native additive equip request dispatched.
+11040343 M2 flame: native additive equip request dispatched.
+11052609 M2 flame: native additive equip request dispatched.
+11053562 M2 flame: native additive equip request dispatched.
+11224359 Checking executable SHA256; no engine access before compatibility passes.
+11225156 Core signatures verified against the supported retail build.
+11225593 Debug menu initialized.
+11226796 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+11226796 Sony SDK input capture installed; Debug/Dev visibility blocks hero controls.
+11272734 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+11276890 Verified main-engine callback registered; native operations are confined to its scope.
+11277140 Native photo-mode entry gate verified and installed; Debug/Dev visibility blocks Open.
+11316750 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+11342984 M2 flame: native additive equip request dispatched.
+11344093 M2 flame: native additive equip request dispatched.
+11345015 M2 flame: native additive equip request dispatched.
+11345093 M2 flame: native additive equip request dispatched.
+11345984 M2 flame: native additive equip request dispatched.
+11346062 M2 flame: native additive equip request dispatched.
+11346968 M2 flame: native additive equip request dispatched.
+11347046 M2 flame: native additive equip request dispatched.
+11347921 M2 flame: native additive equip request dispatched.
+11348000 M2 flame: native additive equip request dispatched.
+11348906 M2 flame: native additive equip request dispatched.
+11349000 M2 flame: native additive equip request dispatched.
+11349140 M2 flame: native additive equip request dispatched.
+11350187 M2 flame: native additive equip request dispatched.
+11351109 M2 flame: native additive equip request dispatched.
+11352062 M2 flame: native additive equip request dispatched.
+11352156 M2 flame: native additive equip request dispatched.
+11353171 M2 flame: native additive equip request dispatched.
+11354156 M2 flame: native additive equip request dispatched.
+11376796 M2 flame: native additive equip request dispatched.
+11376906 M2 flame: native additive equip request dispatched.
+11377906 M2 flame: native additive equip request dispatched.
+12096406 Checking executable SHA256; no engine access before compatibility passes.
+12097062 Core signatures verified against the supported retail build.
+12097359 Debug menu initialized.
+12098375 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+12098375 Sony SDK input capture installed; Debug/Dev visibility blocks hero controls.
+12105046 Game window dispatch ready; snapshots use guarded copies, user actions use the window thread.
+12108437 Verified main-engine callback registered; native operations are confined to its scope.
+12108859 Native photo-mode entry gate verified and installed; Debug/Dev visibility blocks Open.
+12187140 Reload runtime: Current-world Reload is ready [checkpoints=3394]
+12193390 M2 flame: native additive inventory request dispatched; checking held-slot assignment.
+12193390 M2 flame: targeted slot assignment native_return=1 item_id=40008 held_slot=2 replaced_item_id=40009 assigned=1 selected_weapon_verified=1
+12193390 M2 flame: held-slot assignment confirmed.

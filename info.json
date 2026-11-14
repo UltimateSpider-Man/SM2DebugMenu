@@ -1,0 +1,9 @@
+{
+  "name": "SM2DebugMenu",
+  "type": "script",
+  "author": "Local",
+  "version": "2.9.4",
+  "dependencies": [],
+  "game": "MSM2",
+  "format_version": 1
+}

@@ -1,0 +1,40 @@
+﻿{
+    "GameDirectory":  "C:\\Users\\devusm1000\\Desktop\\Marvel Spider-Man 2",
+    "InstalledUtc":  "2026-11-14T19:06:14.4944979Z",
+    "Originals":  [
+                      {
+                          "Key":  "Scripts",
+                          "Path":  "C:\\Users\\devusm1000\\Desktop\\Marvel Spider-Man 2\\scripts.txt",
+                          "Existed":  true,
+                          "Backup":  "C:\\Users\\devusm1000\\Desktop\\Marvel Spider-Man 2\\SM2DebugMenu\\backups\\20261111T1215120579166Z-1c518f\\scripts.txt"
+                      },
+                      {
+                          "Key":  "Dll",
+                          "Path":  "C:\\Users\\devusm1000\\Desktop\\Marvel Spider-Man 2\\scripts\\sm2debugmenu.dll",
+                          "Existed":  false,
+                          "Backup":  "C:\\Users\\devusm1000\\Desktop\\Marvel Spider-Man 2\\SM2DebugMenu\\backups\\20261111T1215120579166Z-1c518f\\sm2debugmenu.dll"
+                      },
+                      {
+                          "Key":  "Package",
+                          "Path":  "C:\\Users\\devusm1000\\Desktop\\Marvel Spider-Man 2\\Mods Library\\SM2DebugMenu.script",
+                          "Existed":  false,
+                          "Backup":  "C:\\Users\\devusm1000\\Desktop\\Marvel Spider-Man 2\\SM2DebugMenu\\backups\\20261111T1215120579166Z-1c518f\\SM2DebugMenu.script"
+                      },
+                      {
+                          "Key":  "Launcher",
+                          "Path":  "C:\\Users\\devusm1000\\Desktop\\Marvel Spider-Man 2\\Launch SM2 Debug Menu.cmd",
+                          "Existed":  false,
+                          "Backup":  "C:\\Users\\devusm1000\\Desktop\\Marvel Spider-Man 2\\SM2DebugMenu\\backups\\20261111T1215120579166Z-1c518f\\Launch SM2 Debug Menu.cmd"
+                      }
+                  ],
+    "DllSha256":  "CCD00CD6B63B338EF957FA60331F910A4DB6B4405C79F15BFCEBBBD93826362B",
+    "PackageSha256":  "1F546FEA3BDACA09523E143924B89B0A6B69BE13AEB8883C40ADD88B7523356D",
+    "LauncherSha256":  "4F7DF1ED944297B8E33319911A2CA3C584BD08D0837B6F5C3CC97C536228260E",
+    "RootDllQuarantines":  [
+                               {
+                                   "Path":  "C:\\Users\\devusm1000\\Desktop\\Marvel Spider-Man 2\\sm2debugmenu.dll",
+                                   "Backup":  "C:\\Users\\devusm1000\\Desktop\\Marvel Spider-Man 2\\SM2DebugMenu\\backups\\menu-shadow-20261114T0116543323401Z\\sm2debugmenu.2.8.1.dll",
+                                   "Sha256":  "F69CACE5F111D3A2F5370B3A8AA68E2D5C848B87B95CC810E25EC1BECE8E077B"
+                               }
+                           ]
+}

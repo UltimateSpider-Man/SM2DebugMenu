@@ -1,0 +1,582 @@
+10667890 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+10668296 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+10668359 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+10668359 First in-game overlay frame submitted to actual swapchain.
+10669765 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+10669781 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+10670421 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+10670421 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+10672078 Overlay hooks restored and completed GPU resources released.
+10923890 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+10924093 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+10924125 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+10924125 First in-game overlay frame submitted to actual swapchain.
+10925468 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+10925468 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+10926125 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+10926125 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+10927781 Overlay hooks restored and completed GPU resources released.
+10928218 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+10928437 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+10928453 Overlay rendering disabled: Injected preview failure after acquiring backbuffers, before font/backend initialization
+10928875 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+10928890 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+10928890 First in-game overlay frame submitted to actual swapchain.
+10929968 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+10930000 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+10930640 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+10930640 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+10932296 Overlay hooks restored and completed GPU resources released.
+11015734 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+11016750 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+11072906 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+11072906 First in-game overlay frame submitted to actual swapchain.
+11889890 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+11898531 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+11904156 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+11904156 First in-game overlay frame submitted to actual swapchain.
+12096671 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+12098375 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+12098437 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+12098437 First in-game overlay frame submitted to actual swapchain.
+12111000 Overlay hooks restored and completed GPU resources released.
+12114406 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+12590562 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+12590640 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+12590921 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+12590968 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+12590968 First in-game overlay frame submitted to actual swapchain.
+12591890 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+12592031 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+12592031 First in-game overlay frame submitted to actual swapchain.
+12594328 Overlay hooks restored and completed GPU resources released.
+12597328 Overlay hooks restored and completed GPU resources released.
+12761375 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+12761578 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+12761593 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+12761593 First in-game overlay frame submitted to actual swapchain.
+12763078 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+12763078 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+12763703 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+12763718 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+12765296 Preview GPU readback requested; rendered=162 hidden=25
+12765453 Overlay hooks restored and completed GPU resources released.
+12766750 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+12766968 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+12767125 Overlay rendering disabled: Injected preview failure after acquiring backbuffers, before font/backend initialization
+12767781 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+12767796 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+12767796 First in-game overlay frame submitted to actual swapchain.
+12769109 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+12769125 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+12769781 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+12769781 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+12771375 Preview GPU readback requested; rendered=158 hidden=25
+12771421 Overlay hooks restored and completed GPU resources released.
+12824765 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+12824937 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+12824968 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+12824968 First in-game overlay frame submitted to actual swapchain.
+12874750 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+12876890 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+12880656 Overlay hooks restored and completed GPU resources released.
+12917515 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+12917515 First in-game overlay frame submitted to actual swapchain.
+13585718 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+13588390 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+13596750 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+13600046 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+13615390 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+13618421 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+13639078 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+13639078 First in-game overlay frame submitted to actual swapchain.
+16712921 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+16713421 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+16713453 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+16713468 First in-game overlay frame submitted to actual swapchain.
+16724375 Overlay hooks restored and completed GPU resources released.
+20070375 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+20071484 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+20071515 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+20071531 First in-game overlay frame submitted to actual swapchain.
+20076656 Overlay hooks restored and completed GPU resources released.
+21494625 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+21494953 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+21495000 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+21495000 First in-game overlay frame submitted to actual swapchain.
+21517593 Overlay hooks restored and completed GPU resources released.
+21624125 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+21626828 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+21670234 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+21670250 First in-game overlay frame submitted to actual swapchain.
+21800500 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+21801046 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+22037140 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+22039125 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+22052703 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+22067843 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+22068046 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+22068078 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+22068078 First in-game overlay frame submitted to actual swapchain.
+22070296 Overlay hooks restored and completed GPU resources released.
+22079781 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+22082875 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+22129375 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+22129390 First in-game overlay frame submitted to actual swapchain.
+22231468 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+22240250 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+22269906 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+22269921 First in-game overlay frame submitted to actual swapchain.
+22393640 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+22399718 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+22439406 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+22439406 First in-game overlay frame submitted to actual swapchain.
+22544171 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+22552421 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+22570781 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+22570781 First in-game overlay frame submitted to actual swapchain.
+23252843 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+23258593 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+23283796 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+23283796 First in-game overlay frame submitted to actual swapchain.
+23802453 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+24027109 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+24076921 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+24076937 First in-game overlay frame submitted to actual swapchain.
+24446937 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+24447125 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+24447156 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+24447156 First in-game overlay frame submitted to actual swapchain.
+24524031 Overlay hooks restored and completed GPU resources released.
+24873765 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+24873968 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+24873984 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+24874000 First in-game overlay frame submitted to actual swapchain.
+24876515 Overlay hooks restored and completed GPU resources released.
+25080937 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+25090421 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+25124125 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+25124125 First in-game overlay frame submitted to actual swapchain.
+25875468 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+25875671 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+25875828 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+25875828 First in-game overlay frame submitted to actual swapchain.
+25962890 Overlay hooks restored and completed GPU resources released.
+26650171 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+26650375 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+26650390 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+26650406 First in-game overlay frame submitted to actual swapchain.
+26659218 Overlay hooks restored and completed GPU resources released.
+27326093 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+27326296 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+27326328 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+27326343 First in-game overlay frame submitted to actual swapchain.
+27335734 Overlay hooks restored and completed GPU resources released.
+27342046 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+27529718 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+27538250 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+27548453 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+27548453 First in-game overlay frame submitted to actual swapchain.
+3595781 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+3603984 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+4022656 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+4031500 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+4084281 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+4084281 First in-game overlay frame submitted to actual swapchain.
+6050171 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+6050406 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+6050437 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+6050437 First in-game overlay frame submitted to actual swapchain.
+6056921 Overlay hooks restored and completed GPU resources released.
+6762578 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+6762781 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+6762796 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+6762812 First in-game overlay frame submitted to actual swapchain.
+6801312 Overlay hooks restored and completed GPU resources released.
+6963765 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+6978343 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+7076875 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+7076890 First in-game overlay frame submitted to actual swapchain.
+7264843 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+7265046 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+7265109 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+7265109 First in-game overlay frame submitted to actual swapchain.
+7278968 Overlay hooks restored and completed GPU resources released.
+11769406 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+11787109 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+11846843 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+11846843 First in-game overlay frame submitted to actual swapchain.
+12203781 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+12225406 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+12284656 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+12284671 First in-game overlay frame submitted to actual swapchain.
+14175171 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+14178000 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+14228171 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+14228187 First in-game overlay frame submitted to actual swapchain.
+16535593 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+16535781 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+16535812 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+16535812 First in-game overlay frame submitted to actual swapchain.
+16549234 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+16552203 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+16555828 Overlay hooks restored and completed GPU resources released.
+16619656 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+16619671 First in-game overlay frame submitted to actual swapchain.
+18250625 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+18260218 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+18331031 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+18331046 First in-game overlay frame submitted to actual swapchain.
+20257937 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+20259703 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+20359796 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+20359796 First in-game overlay frame submitted to actual swapchain.
+1244593 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+1245015 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+1245046 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+1245046 First in-game overlay frame submitted to actual swapchain.
+1519968 Overlay hooks restored and completed GPU resources released.
+2016562 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+2016781 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+2016796 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+2016796 First in-game overlay frame submitted to actual swapchain.
+2018125 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+2018125 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+2018796 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+2018812 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+2020390 Preview GPU readback requested; rendered=159 hidden=25
+2020437 Overlay hooks restored and completed GPU resources released.
+2021031 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+2021218 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+2021234 Overlay rendering disabled: Injected preview failure after acquiring backbuffers, before font/backend initialization
+2021640 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+2021656 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+2021656 First in-game overlay frame submitted to actual swapchain.
+2022703 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+2022734 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+2023375 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+2023390 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+2024953 Preview GPU readback requested; rendered=157 hidden=25
+2025015 Overlay hooks restored and completed GPU resources released.
+3121609 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+3127171 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+3127375 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+3127390 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+3127390 First in-game overlay frame submitted to actual swapchain.
+3154218 Overlay hooks restored and completed GPU resources released.
+3156421 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+3176453 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+3176453 First in-game overlay frame submitted to actual swapchain.
+4259765 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+4260000 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+4260015 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+4260015 First in-game overlay frame submitted to actual swapchain.
+4261375 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+4261375 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+4262046 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+4262062 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+4263640 Preview GPU readback requested; rendered=163 hidden=25
+4263687 Overlay hooks restored and completed GPU resources released.
+4264296 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+4264484 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+4264484 Overlay rendering disabled: Injected preview failure after acquiring backbuffers, before font/backend initialization
+4264718 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+4264734 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+4264734 First in-game overlay frame submitted to actual swapchain.
+4265984 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+4266015 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+4266671 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+4266687 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+4268250 Preview GPU readback requested; rendered=153 hidden=25
+4268312 Overlay hooks restored and completed GPU resources released.
+4392765 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+4396109 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+4451703 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+4451703 First in-game overlay frame submitted to actual swapchain.
+5029218 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+5029421 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+5029453 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5029453 First in-game overlay frame submitted to actual swapchain.
+5030765 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+5030781 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5031437 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+5031437 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5033031 Preview GPU readback requested; rendered=162 hidden=25
+5033093 Overlay hooks restored and completed GPU resources released.
+5033703 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+5033890 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+5033906 Overlay rendering disabled: Injected preview failure after acquiring backbuffers, before font/backend initialization
+5034125 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+5034140 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5034140 First in-game overlay frame submitted to actual swapchain.
+5035406 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+5035437 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5036078 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+5036093 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5037656 Preview GPU readback requested; rendered=150 hidden=25
+5037718 Overlay hooks restored and completed GPU resources released.
+5158125 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+5158312 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+5158328 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5158328 First in-game overlay frame submitted to actual swapchain.
+5208375 Overlay hooks restored and completed GPU resources released.
+5306734 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+5322625 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+5367859 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5367875 First in-game overlay frame submitted to actual swapchain.
+5798093 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+5798296 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+5798328 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5798328 First in-game overlay frame submitted to actual swapchain.
+5799671 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+5799687 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5800328 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+5800328 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5801921 Preview GPU readback requested; rendered=160 hidden=25
+5801984 Overlay hooks restored and completed GPU resources released.
+5802625 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+5802812 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+5802843 Overlay rendering disabled: Injected preview failure after acquiring backbuffers, before font/backend initialization
+5803078 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+5803093 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5803093 First in-game overlay frame submitted to actual swapchain.
+5804343 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+5804375 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5805000 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+5805015 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5806593 Preview GPU readback requested; rendered=156 hidden=25
+5806640 Overlay hooks restored and completed GPU resources released.
+5832843 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+5833031 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+5833062 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5833062 First in-game overlay frame submitted to actual swapchain.
+5861750 Overlay hooks restored and completed GPU resources released.
+5918734 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+5922437 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+6013296 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+6013312 First in-game overlay frame submitted to actual swapchain.
+6439531 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+6440140 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+6440203 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+6440203 First in-game overlay frame submitted to actual swapchain.
+6449015 Overlay hooks restored and completed GPU resources released.
+1114390 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+1115187 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+1115265 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+1115265 First in-game overlay frame submitted to actual swapchain.
+1116625 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+1116640 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+1117437 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+1117453 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+1119015 Preview GPU readback requested; rendered=163 hidden=25
+1119078 Overlay hooks restored and completed GPU resources released.
+1119859 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+1120062 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+1120078 Overlay rendering disabled: Injected preview failure after acquiring backbuffers, before font/backend initialization
+1120546 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+1120562 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+1120562 First in-game overlay frame submitted to actual swapchain.
+1121609 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+1121656 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+1122281 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+1122296 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+1123890 Preview GPU readback requested; rendered=157 hidden=25
+1123953 Overlay hooks restored and completed GPU resources released.
+2331578 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+2331812 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+2331843 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+2331843 First in-game overlay frame submitted to actual swapchain.
+2333234 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+2333250 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+2333828 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+2333828 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+2335437 Preview GPU readback requested; rendered=161 hidden=25
+2335484 Overlay hooks restored and completed GPU resources released.
+2336109 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+2336312 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+2336328 Overlay rendering disabled: Injected preview failure after acquiring backbuffers, before font/backend initialization
+2336562 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+2336578 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+2336578 First in-game overlay frame submitted to actual swapchain.
+2337921 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+2337953 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+2338609 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+2338640 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+2340203 Preview GPU readback requested; rendered=157 hidden=25
+2340265 Overlay hooks restored and completed GPU resources released.
+2399046 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+2399250 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+2399265 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+2399281 First in-game overlay frame submitted to actual swapchain.
+2448609 Overlay hooks restored and completed GPU resources released.
+2575687 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+2592671 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+2630812 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+2630828 First in-game overlay frame submitted to actual swapchain.
+2886687 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+4011687 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+4042843 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+4077015 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+4077031 First in-game overlay frame submitted to actual swapchain.
+4380359 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+4408593 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+4412484 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+4433000 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+4433000 First in-game overlay frame submitted to actual swapchain.
+4719546 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+4736281 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+4787093 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+4787109 First in-game overlay frame submitted to actual swapchain.
+5135625 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+5136265 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+5136359 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5136359 First in-game overlay frame submitted to actual swapchain.
+5186796 Overlay hooks restored and completed GPU resources released.
+6816046 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+6816250 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+6816281 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+6816281 First in-game overlay frame submitted to actual swapchain.
+6817625 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+6817640 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+6818281 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+6818296 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+6819406 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+6819421 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+6820046 Preview GPU readback requested; rendered=158 hidden=27
+6820093 Overlay hooks restored and completed GPU resources released.
+6820687 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+6820859 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+6820875 Overlay rendering disabled: Injected preview failure after acquiring backbuffers, before font/backend initialization
+6821296 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+6821312 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+6821312 First in-game overlay frame submitted to actual swapchain.
+6822375 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+6822406 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+6823046 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+6823062 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+6824187 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+6824203 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+6824843 Preview GPU readback requested; rendered=154 hidden=27
+6824890 Overlay hooks restored and completed GPU resources released.
+6852468 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+6862421 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+6981781 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+7058562 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+7058750 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+7058781 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+7058781 First in-game overlay frame submitted to actual swapchain.
+7182093 Overlay hooks restored and completed GPU resources released.
+7361562 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+7389296 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+8436218 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+8681625 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+10128656 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+10350078 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+10969093 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+11357984 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+13314140 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+13798687 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+13798890 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+13798921 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+13798921 First in-game overlay frame submitted to actual swapchain.
+13800281 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+13800281 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+13800953 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+13800968 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+13802046 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+13802046 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+13802671 Preview GPU readback requested; rendered=159 hidden=27
+13802750 Overlay hooks restored and completed GPU resources released.
+13803390 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+13803593 Captured actual private DXVK swapchain and genuine D3D12 DIRECT queue; no window created.
+13803609 Overlay rendering disabled: Injected preview failure after acquiring backbuffers, before font/backend initialization
+13804046 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+13804062 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+13804062 First in-game overlay frame submitted to actual swapchain.
+13805140 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+13805171 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+13805828 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+13805828 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+13806937 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+13806937 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+13807578 Preview GPU readback requested; rendered=155 hidden=27
+13807640 Overlay hooks restored and completed GPU resources released.
+14884390 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+14925578 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+14948437 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+15121421 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+15166046 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+15208578 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+15364171 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+15710171 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+15742281 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+15829031 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+1952015 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+1934156 Private factory COM data hooks ready; waiting for actual game swapchain creation.
+2811453 Overlay initialization refused: Cannot locate game root and its private DXGI runtime
+4716593 Overlay initialization refused: Cannot locate game root and its private DXGI runtime
+4716593 Preview failed: Cannot initialize preview overlay capture
+4716593 Overlay hooks restored and completed GPU resources released.
+5079703 Native Windows factory COM data hooks ready; waiting for actual game swapchain creation.
+5080000 Captured actual native Windows DXGI swapchain and genuine D3D12 DIRECT queue; no window created.
+5080031 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5080031 First in-game overlay frame submitted to actual swapchain.
+5081000 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+5081015 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5081500 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+5081515 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5082468 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+5082468 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5083140 Preview GPU readback requested; rendered=153 hidden=27
+5083234 Overlay hooks restored and completed GPU resources released.
+5083546 Native Windows factory COM data hooks ready; waiting for actual game swapchain creation.
+5083750 Captured actual native Windows DXGI swapchain and genuine D3D12 DIRECT queue; no window created.
+5083750 Overlay rendering disabled: Injected preview failure after acquiring backbuffers, before font/backend initialization
+5083812 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+5083828 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5083828 First in-game overlay frame submitted to actual swapchain.
+5084734 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+5084750 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5085234 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+5085250 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5086203 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+5086203 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5086875 Preview GPU readback requested; rendered=152 hidden=27
+5086953 Overlay hooks restored and completed GPU resources released.
+5140265 Native Windows factory COM data hooks ready; waiting for actual game swapchain creation.
+5145500 Captured actual native Windows DXGI swapchain and genuine D3D12 DIRECT queue; no window created.
+5184078 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+5184109 First in-game overlay frame submitted to actual swapchain.
+6039781 Native Windows factory COM data hooks ready; waiting for actual game swapchain creation.
+6046781 Captured actual native Windows DXGI swapchain and genuine D3D12 DIRECT queue; no window created.
+6102562 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+6102578 First in-game overlay frame submitted to actual swapchain.
+6833359 Native Windows factory COM data hooks ready; waiting for actual game swapchain creation.
+6840703 Captured actual native Windows DXGI swapchain and genuine D3D12 DIRECT queue; no window created.
+6906703 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+6906718 First in-game overlay frame submitted to actual swapchain.
+7983593 Native Windows factory COM data hooks ready; waiting for actual game swapchain creation.
+8017843 Captured actual native Windows DXGI swapchain and genuine D3D12 DIRECT queue; no window created.
+8040265 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+8040359 First in-game overlay frame submitted to actual swapchain.
+8949843 Native Windows factory COM data hooks ready; waiting for actual game swapchain creation.
+8955109 Captured actual native Windows DXGI swapchain and genuine D3D12 DIRECT queue; no window created.
+9030953 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+9030968 First in-game overlay frame submitted to actual swapchain.
+10634984 Native Windows factory COM data hooks ready; waiting for actual game swapchain creation.
+10674906 Captured actual native Windows DXGI swapchain and genuine D3D12 DIRECT queue; no window created.
+10756671 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+10756687 First in-game overlay frame submitted to actual swapchain.
+10869406 Native Windows factory COM data hooks ready; waiting for actual game swapchain creation.
+10923718 Captured actual native Windows DXGI swapchain and genuine D3D12 DIRECT queue; no window created.
+11004921 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+11004937 First in-game overlay frame submitted to actual swapchain.
+11224359 Native Windows factory COM data hooks ready; waiting for actual game swapchain creation.
+11272609 Captured actual native Windows DXGI swapchain and genuine D3D12 DIRECT queue; no window created.
+11315890 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+11315953 First in-game overlay frame submitted to actual swapchain.
+12096406 Native Windows factory COM data hooks ready; waiting for actual game swapchain creation.
+12104937 Captured actual native Windows DXGI swapchain and genuine D3D12 DIRECT queue; no window created.
+12107546 Actual swapchain resize completed; overlay resources will be rebuilt when visible.
+12186500 Overlay GPU resources ready on captured game queue; format=28 buffers=2
+12186515 First in-game overlay frame submitted to actual swapchain.
