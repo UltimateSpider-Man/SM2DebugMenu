@@ -6,6 +6,9 @@ enum class MenuInput { Toggle, Up, Down, Left, Right, Accept, Back, PreviousPage
 
 // Producers may run on the controller, window or render thread.
 void QueueMenuInput(MenuInput input);
+// Numeric text from the existing game/preview window; consumed only by an
+// active menu editor on the render thread. No game objects are accessed.
+void QueueMenuText(wchar_t character);
 bool MenuVisible();
 // Called on the render thread, before opening an ImGui frame.
 bool PumpMenuInput();

@@ -723,6 +723,8 @@ void CaptureGpuFrame(Frame& frame) {
     }
 }
 LRESULT CALLBACK PreviewProc(HWND window, UINT message, WPARAM wparam, LPARAM lparam) {
+    if (message == WM_CHAR && MenuVisible() && wparam <= 0xffff)
+        QueueMenuText(static_cast<wchar_t>(wparam));
     if (message == WM_SIZE && wparam != SIZE_MINIMIZED) { previewWidth = LOWORD(lparam); previewHeight = HIWORD(lparam); previewResize = true; return 0; }
     if (message == WM_CLOSE) { DestroyWindow(window); return 0; }
     if (message == WM_DESTROY) { PostQuitMessage(0); return 0; }

@@ -12,6 +12,7 @@
 #include "reload_options_runtime.h"
 #include "camera_debug_runtime.h"
 #include "reload_selection_runtime.h"
+#include "hero_warp_runtime.h"
 
 namespace sm2debug {
 
@@ -22,7 +23,7 @@ enum class Action {
     Borderless, RestoreWindow, ResetAll, ExportDiagnostics, SwitchCharacter,
     HeroNoDamage, HeroNoDeath, EnemyNoDeath, EnemyNoDamage, DebugSetting,
     ReloadCheckpoint, ExitFrontend, CopyReloadData, CompletePrimary, FullReload, ReplayMission, SetNewGamePlus, ExitLobby, CameraShake,
-    EquipMJFlamethrower
+    EquipMJFlamethrower, SwitchMJWeapon, SetHeroScale, ResetHeroScale, HeroWarp
 };
 
 struct Snapshot {
@@ -30,8 +31,13 @@ struct Snapshot {
     bool heroReady = false;
     bool healthReady = false;
     bool teleportReady = false;
+    bool heroScaleReady = false;
+    bool heroScaleOwned = false;
+    float heroScale = 1.0f;
     bool engineActionsReady = false;
     bool mjFlamethrowerReady = false;
+    bool mjWeaponSwitchReady = false;
+    uint16_t mjWeaponSelectedItem = 0;
     bool autoHeal = false;
     bool healthFlagsReady = false;
     bool heroNoDamage = false, heroNoDeath = false;
@@ -60,6 +66,7 @@ struct Snapshot {
     ReloadOptionsState reloadOptions;
     CameraDebugState cameraDebug;
     ReloadSelectionState reloadSelection;
+    HeroWarpState heroWarp;
 };
 
 struct ReloadPolicy {
@@ -93,6 +100,7 @@ void SubmitReplayAction(const ReplayState& captured);
 void SubmitReplayDataCopy(const ReloadState& world, const ReplaySelection& selection);
 void SubmitSetNewGamePlus(const ReloadOptionsState& captured, bool enabled);
 void SubmitCameraShake(const CameraDebugState& captured, bool enabled);
+void SubmitHeroWarp(const HeroWarpState& captured, const HeroWarpPosition& position);
 void SubmitReloadMissionSelection(const ReloadMissionSelection& selection);
 void SubmitReloadWithPolicy(Action action, const ReloadState& captured, uint32_t checkpointKey,
     const ReloadPolicy& policy);

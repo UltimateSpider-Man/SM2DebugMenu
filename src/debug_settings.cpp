@@ -42,11 +42,14 @@ struct BindingSpec {
 struct BindingAlias { std::string id, page, label; };
 // Separate from reflected fields: exact original raw Boolean semantics,
 // guarded by the entire matched retail consumer and its RIP-relative read.
+enum class RawBooleanRead { CompareImmediateZero, CompareR15Zero };
 struct RawBooleanSpec {
     std::string id, page, label;
     std::uintptr_t live = 0, consumer = 0;
     std::size_t readOffset = 0;
     std::vector<unsigned char> code;
+    RawBooleanRead read = RawBooleanRead::CompareImmediateZero;
+    std::size_t zeroOffset = 0;
 };
 #include "debug_settings_bindings.inc"
 struct Image {
@@ -108,11 +111,23 @@ bool WritableScalar(const Image& image, std::uintptr_t address, std::size_t size
     return address >= region && size <= memory.RegionSize && address - region <= memory.RegionSize - size;
 }
 bool CurrentRawBoolean(const Image& image, const RawBooleanSpec& spec, std::uintptr_t& address, unsigned char& value) {
-    if (spec.code.size() < 7 || spec.code.size() > 1024 || spec.readOffset > spec.code.size()-7 ||
-        spec.code[spec.readOffset] != 0x80 || spec.code[spec.readOffset+1] != 0x3d || spec.code[spec.readOffset+6] != 0) return false;
+    if (spec.code.size() < 7 || spec.code.size() > 2048 || spec.readOffset > spec.code.size()-7) return false;
+    std::size_t displacementOffset = 0;
+    if (spec.read == RawBooleanRead::CompareImmediateZero) {
+        if (spec.zeroOffset || spec.code[spec.readOffset] != 0x80 || spec.code[spec.readOffset+1] != 0x3d ||
+            spec.code[spec.readOffset+6] != 0) return false;
+        displacementOffset = 2;
+    } else if (spec.read == RawBooleanRead::CompareR15Zero) {
+        // The pinned Anti-Venom activation consumer clears callee-saved R15d
+        // before comparing this byte with R15b, and preserves it through the read.
+        if (spec.zeroOffset > spec.readOffset || spec.readOffset-spec.zeroOffset < 3 ||
+            spec.code[spec.zeroOffset] != 0x45 || spec.code[spec.zeroOffset+1] != 0x33 || spec.code[spec.zeroOffset+2] != 0xff ||
+            spec.code[spec.readOffset] != 0x44 || spec.code[spec.readOffset+1] != 0x38 || spec.code[spec.readOffset+2] != 0x3d) return false;
+        displacementOffset = 3;
+    } else return false;
     const auto codeAddress=image.At(spec.consumer,spec.code.size());
     address=image.At(spec.live);
-    std::int32_t displacement=0;std::memcpy(&displacement,spec.code.data()+spec.readOffset+2,4);
+    std::int32_t displacement=0;std::memcpy(&displacement,spec.code.data()+spec.readOffset+displacementOffset,4);
     if (!codeAddress || !address || spec.consumer > static_cast<std::uintptr_t>(std::numeric_limits<std::int64_t>::max())-spec.code.size() ||
         static_cast<std::int64_t>(spec.consumer+spec.readOffset+7)+displacement != static_cast<std::int64_t>(spec.live) ||
         !WritableScalar(image,address,1)) return false;
@@ -124,7 +139,7 @@ bool CurrentRawBoolean(const Image& image, const RawBooleanSpec& spec, std::uint
         memory.State!=MEM_COMMIT || (memory.Protect&(PAGE_GUARD|PAGE_NOACCESS)) ||
         (memory.Protect&0xff)!=PAGE_EXECUTE_READ) return false;
     const auto region=reinterpret_cast<std::uintptr_t>(memory.BaseAddress);
-    std::array<unsigned char,1024> actual{};
+    std::array<unsigned char,2048> actual{};
     return codeAddress>=region&&spec.code.size()<=memory.RegionSize&&codeAddress-region<=memory.RegionSize-spec.code.size()&&
         ReadBytes(codeAddress,actual.data(),spec.code.size())&&std::equal(spec.code.begin(),spec.code.end(),actual.begin())&&
         Read(address,value)&&value<=1;

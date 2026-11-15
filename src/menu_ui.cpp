@@ -10,18 +10,23 @@
 #include <array>
 #include <atomic>
 #include <cctype>
+#include <cmath>
 #include <cstdio>
 #include <deque>
 #include <filesystem>
 #include <fstream>
+#include <iomanip>
+#include <locale>
 #include <mutex>
+#include <sstream>
 #include <string>
 #include <vector>
 
 namespace sm2debug {
 namespace {
 std::mutex inputMutex;
-std::deque<std::pair<MenuInput, DWORD>> inputQueue;
+struct MenuEvent { MenuInput input; DWORD producer; wchar_t text = 0; };
+std::deque<MenuEvent> inputQueue;
 std::atomic<bool> visible{false};
 std::atomic<bool> preview{false}, uiReady{false};
 bool traceInput = false;
@@ -30,6 +35,12 @@ int page = -1, selected = 0, firstRow = 0, character = 0;
 std::string node = "debug";
 std::vector<std::string> history;
 float healthLimit = 100, moveStep = 10;
+struct WarpEditor {
+    bool editing = false, valid = false;
+    HeroWarpState captured;
+    HeroWarpPosition position;
+    std::wstring text, draft, status;
+} warpEditor;
 ReloadToken reloadSelectionContext;
 uint32_t reloadCheckpointKey = 0;
 bool reloadResetActorSave = false;
@@ -45,7 +56,7 @@ ReloadMissionSelection publishedMissionSelection;
 ReloadToken publishedMissionWorld;
 bool havePublishedMission=false;
 const std::array<const char*, 5> pages{{"Common Items", "Health", "Hero", "Rendering", "Engine"}};
-enum class Kind { Page, Toggle, Action, HealthValue, StepValue, Character, Setting, ReloadCheckpoint, ReloadActorReset,
+enum class Kind { Page, Toggle, Action, HealthValue, StepValue, Character, HeroScale, HeroWarpText, HeroWarpAction, Setting, ReloadCheckpoint, ReloadActorReset,
     ReloadReplay, ReloadMission, ReloadObjective, ReloadGraph, ReloadMissionSort, ReloadObjectiveSort, ReloadFilter,
     ReloadNewGamePlus, ReloadKeepLoadout, CaptureFormat, CaptureDisplay, CameraShake,
     ReloadStartState, BranchAdd, BranchRemoveEmpty, BranchRemoveAll, BranchMission, BranchObjective, BranchRemove, Info, Close };
@@ -75,6 +86,14 @@ struct Row {
     bool applyMissionSelection=false,allowAvailable=false;
     std::size_t branchIndex=0;
     std::vector<std::uint32_t> missionChoices{},objectiveChoices{};
+    int characterIndex = -1;
+    uint32_t characterActorHandle = 0;
+    std::wstring characterName{};
+    uint32_t scaleActorHandle = 0;
+    float scaleValue = 1.0f;
+    bool scaleOwned = false;
+    HeroWarpState warp{};
+    HeroWarpPosition warpPosition{};
 };
 std::string Utf8(const std::wstring& text) {
     if (text.empty()) return {};
@@ -88,6 +107,37 @@ std::string Number(double value, int decimals = 1) {
     char buffer[64]{};
     std::snprintf(buffer, sizeof(buffer), "%.*f", decimals, value);
     return buffer;
+}
+bool WarpReady(const Snapshot& s) {
+    return s.supported && s.heroReady && s.engineActionsReady && s.heroWarp.supported && s.heroWarp.ready &&
+           s.actorHandle == s.heroWarp.actorHandle;
+}
+void CancelWarpEdit() {
+    warpEditor.editing = false;
+    warpEditor.draft.clear();
+    warpEditor.status.clear();
+}
+void SyncWarpEditor(const Snapshot& s) {
+    if (!WarpReady(s)) { warpEditor = {}; return; }
+    if (SameHeroWarpContext(warpEditor.captured, s.heroWarp)) return;
+    warpEditor = {};
+    warpEditor.captured = s.heroWarp;
+    std::wostringstream text;
+    text.imbue(std::locale::classic());
+    text << std::setprecision(9) << s.heroWarp.position.x << L", " << s.heroWarp.position.y << L", " << s.heroWarp.position.z;
+    warpEditor.text = text.str();
+}
+bool NumericCsvCharacter(wchar_t c) {
+    return (c >= L'0' && c <= L'9') || c == L'+' || c == L'-' || c == L'.' || c == L',' ||
+           c == L' ' || c == L'e' || c == L'E' || c == L'\b';
+}
+void ApplyMenuText(wchar_t c) {
+    if (!visible || preview || node != "local.hero.warp" || !warpEditor.editing || !NumericCsvCharacter(c)) return;
+    const auto s = GetSnapshot();
+    if (!WarpReady(s) || !SameHeroWarpContext(warpEditor.captured, s.heroWarp)) { warpEditor = {}; return; }
+    if (c == L'\b') { if (!warpEditor.draft.empty()) warpEditor.draft.pop_back(); }
+    else if (warpEditor.draft.size() < 255) warpEditor.draft.push_back(c);
+    warpEditor.status.clear();
 }
 Row Info(const char* name, std::string value = {}) { return {name, std::move(value), Kind::Info}; }
 Row Command(const char* name, Action action, bool enabled = true) {
@@ -368,6 +418,29 @@ std::vector<Row> ExtraMissionRows(const Snapshot& s) {
     }
     return rows;
 }
+Row CharacterPicker(const Snapshot& s, const char* label) {
+    if (s.characterNames.empty()) character = 0;
+    else character = std::clamp(character, 0, static_cast<int>(s.characterNames.size()) - 1);
+    return {label, s.characterNames.empty() ? "Waiting for hero" : Utf8(s.characterNames[character]),
+            Kind::Character, Action::SwitchCharacter, s.heroReady && !s.characterNames.empty()};
+}
+Row CharacterSwitch(const Snapshot& s) {
+    auto row = Command("Switch character", Action::SwitchCharacter,
+                       s.engineActionsReady && s.heroReady && !s.characterNames.empty());
+    row.characterActorHandle = s.actorHandle;
+    if (character >= 0 && character < static_cast<int>(s.characterNames.size())) {
+        row.characterIndex = character;
+        row.characterName = s.characterNames[character];
+    }
+    return row;
+}
+void BindHeroScale(Row& row, const Snapshot& s) {
+    row.enabled = s.supported && s.heroReady && s.heroScaleReady && s.engineActionsReady &&
+                  std::isfinite(s.heroScale) && s.heroScale > 0;
+    row.scaleActorHandle = s.actorHandle;
+    row.scaleValue = s.heroScale;
+    row.scaleOwned = s.heroScaleOwned;
+}
 std::vector<Row> LocalRows(const Snapshot& s) {
     std::vector<Row> rows;
     if (page < 0) {
@@ -394,11 +467,7 @@ std::vector<Row> LocalRows(const Snapshot& s) {
                 Command("Apply maximum health", Action::SetMaxHealth, canChangeHealth),
                 Command("Reset health overrides", Action::ResetHealth, s.healthFlagsReady || s.healthReady)};
     } else if (page == 2) {
-        if (s.characterNames.empty()) character = 0;
-        else character = std::clamp(character, 0, static_cast<int>(s.characterNames.size()) - 1);
-        rows = {{"Character", s.characterNames.empty() ? "Waiting for hero" : Utf8(s.characterNames[character]), Kind::Character,
-                 Action::SwitchCharacter, s.heroReady && !s.characterNames.empty()},
-                Command("Switch character", Action::SwitchCharacter, s.engineActionsReady && s.heroReady && !s.characterNames.empty()),
+        rows = {CharacterPicker(s, "Character"), CharacterSwitch(s),
                 Info("Position X", Number(s.x, 3)), Info("Position Y", Number(s.y, 3)), Info("Position Z", Number(s.z, 3)),
                 Command("Save position", Action::SavePosition, s.teleportReady),
                 Command("Load position", Action::LoadPosition, s.engineActionsReady && s.teleportReady && s.savedPosition),
@@ -431,6 +500,9 @@ std::vector<Row> Rows(const Snapshot& s) {
     if(node=="debug.reload_map.extra_branches"){SyncReloadSelection(s);return ExtraMissionRows(s);}
     const bool local = node.rfind("local.", 0) == 0;
     std::vector<Row> rows = local && page >= 0 ? LocalRows(s) : std::vector<Row>{};
+    if (node == "local.hero.characterselection")
+        rows = {CharacterPicker(s, "Select Character:"), CharacterSwitch(s)};
+    if (node == "local.hero.warp") SyncWarpEditor(s);
     const auto* definition = FindReferencePage(node);
     if (!definition) {
         if (rows.empty()) rows.push_back(Info("Menu unavailable", "Unavailable"));
@@ -443,6 +515,11 @@ std::vector<Row> Rows(const Snapshot& s) {
         flame.sourceHelp="Mary Jane: equip the M2 and its fuel-tank backpack, then aim and hold Fire.";
         if (!flame.enabled) flame.value="Requires Mary Jane";
         rows.push_back(std::move(flame));
+        auto weaponSwitch=Command("Switch MJ weapon",Action::SwitchMJWeapon,
+                                  s.supported&&s.engineActionsReady&&s.mjWeaponSwitchReady);
+        weaponSwitch.sourceHelp="Switch between your owned M2 flamethrower and Sonic Shotgun. Both weapons stay in your inventory.";
+        if (!weaponSwitch.enabled) weaponSwitch.value="Requires owned M2 and Sonic Shotgun";
+        rows.push_back(std::move(weaponSwitch));
     }
     const auto reloadChoices = node == "debug.reload_map" ? ReloadChoices(s) : nullptr;
     for (const auto& item : definition->rows) {
@@ -455,6 +532,26 @@ std::vector<Row> Rows(const Snapshot& s) {
         row.target = item.target; row.heading = item.heading;
         if (node == "debug") row.value.clear();
         BindSetting(row, s, node);
+        if (node == "local.hero.warp") {
+            row.warp = warpEditor.captured;
+            if (item.label == "Location (comma seperated)") {
+                row.kind = Kind::HeroWarpText; row.enabled = WarpReady(s);
+                row.value = row.enabled ? Utf8(warpEditor.editing ? warpEditor.draft + L"|" : warpEditor.text) : "Waiting for hero";
+                if (row.value.size() > 56) row.value = "..." + row.value.substr(row.value.size() - 56);
+            } else if (item.label == "Warp Hero") {
+                row.kind = Kind::HeroWarpAction;
+                row.enabled = WarpReady(s) && warpEditor.valid && !warpEditor.editing;
+                row.warpPosition = warpEditor.position;
+                row.value = row.enabled ? "" : "Enter location first";
+            }
+        }
+        if (node == "local.hero.scale" && item.label == "Hero Scale") {
+            row.kind = Kind::HeroScale;
+            row.action = Action::SetHeroScale;
+            BindHeroScale(row, s);
+            row.value = s.heroScaleReady && std::isfinite(s.heroScale) && s.heroScale > 0 ?
+                Number(s.heroScale, 3) : "Waiting for hero";
+        }
         if (node == "debug.reload_map") BindReload(row, s, reloadChoices);
         if (node == "debug.health") {
             std::string name = item.label;
@@ -484,9 +581,16 @@ std::vector<Row> Rows(const Snapshot& s) {
         row.sourceHelp = item.help;
         rows.push_back(std::move(row));
     }
+    if (node == "local.hero.scale") {
+        auto reset = Command("Reset scale", Action::ResetHeroScale);
+        BindHeroScale(reset, s);
+        reset.enabled = reset.enabled && s.heroScaleOwned;
+        rows.push_back(std::move(reset));
+    }
     return rows;
 }
 void SetNode(const std::string& next, bool remember = true) {
+    if (next != "local.hero.warp") CancelWarpEdit();
     if (remember) { if (history.size() >= 32) history.erase(history.begin()); history.push_back(node); }
     node = next; page = -1; selected = firstRow = 0;
     const std::array<const char*, 5> locals{{"local.common", "local.health", "local.hero", "local.rendering", "local.engine"}};
@@ -506,6 +610,36 @@ void Activate(const Row& row, int direction) {
     if (!row.enabled) return;
     if (!row.target.empty()) { SetNode(row.target); return; }
     if (row.kind == Kind::Page) return;
+    if (row.kind == Kind::HeroWarpText || row.kind == Kind::HeroWarpAction) {
+        if (direction || !visible || preview) return;
+        const auto s = GetSnapshot();
+        if (!WarpReady(s) || !SameHeroWarpContext(row.warp, s.heroWarp) ||
+            !SameHeroWarpContext(row.warp, warpEditor.captured)) return;
+        if (row.kind == Kind::HeroWarpText) {
+            warpEditor.editing = true; warpEditor.draft = warpEditor.text; warpEditor.status.clear();
+        } else if (warpEditor.valid && !warpEditor.editing) {
+            HeroWarpPosition parsed{}; std::wstring status;
+            if (ParseHeroWarpPosition(warpEditor.text, parsed, status) &&
+                parsed.x == row.warpPosition.x && parsed.y == row.warpPosition.y && parsed.z == row.warpPosition.z)
+                SubmitHeroWarp(row.warp, parsed);
+        }
+        return;
+    }
+    if (row.kind == Kind::HeroScale || row.action == Action::ResetHeroScale) {
+        const bool reset = row.action == Action::ResetHeroScale;
+        if ((reset && direction) || (!reset && !direction)) return;
+        const auto s = GetSnapshot();
+        if (!visible || preview || !s.supported || !s.heroReady || !s.heroScaleReady || !s.engineActionsReady ||
+            !std::isfinite(s.heroScale) || s.heroScale <= 0 || row.scaleActorHandle != s.actorHandle ||
+            row.scaleValue != s.heroScale || row.scaleOwned != s.heroScaleOwned) return;
+        if (reset) {
+            if (s.heroScaleOwned) SubmitAction(Action::ResetHeroScale);
+        } else {
+            const float value = std::clamp(s.heroScale + (direction < 0 ? -0.025f : 0.025f), 0.1f, 10.0f);
+            if (value != s.heroScale) SubmitAction(Action::SetHeroScale, value);
+        }
+        return;
+    }
     if (row.kind == Kind::Setting) { SubmitDebugSetting(row.settingId, direction); return; }
     if (row.kind == Kind::CameraShake) { SubmitCameraShake(row.cameraDebug,direction?direction>0:!row.checked);return; }
     if (row.kind == Kind::CaptureFormat) { CycleCaptureImageFormat(direction); return; }
@@ -615,7 +749,7 @@ void Activate(const Row& row, int direction) {
         reloadSelectionContext = row.reload.token;
         return;
     }
-    if (row.kind == Kind::Close) { InvalidateMenuSnapshot(); visible = false; return; }
+    if (row.kind == Kind::Close) { warpEditor = {}; InvalidateMenuSnapshot(); visible = false; return; }
     if (row.kind == Kind::HealthValue) { healthLimit = std::clamp(healthLimit + (direction < 0 ? -10.0f : 10.0f), 1.0f, 100000.0f); return; }
     if (row.kind == Kind::StepValue) { moveStep = std::clamp(moveStep + (direction < 0 ? -1.0f : 1.0f), 0.1f, 1000.0f); return; }
     if (row.kind == Kind::Character) {
@@ -628,6 +762,17 @@ void Activate(const Row& row, int direction) {
         if (row.action == Action::Borderless) SubmitAction(enabled ? Action::Borderless : Action::RestoreWindow);
         else SubmitAction(row.action, enabled ? 1.0f : 0.0f);
     } else if (row.kind == Kind::Action && !direction) {
+        if (row.action == Action::SwitchCharacter) {
+            const auto s = GetSnapshot();
+            // Bind apply to the actor and exact choice displayed in this row.
+            // The existing backend revalidates its queued command on the engine thread.
+            if (!visible || preview || !s.supported || !s.engineActionsReady || !s.heroReady ||
+                row.characterActorHandle != s.actorHandle || row.characterIndex != character ||
+                row.characterIndex < 0 || row.characterIndex >= static_cast<int>(s.characterNames.size()) ||
+                row.characterName.empty() || row.characterName != s.characterNames[row.characterIndex]) return;
+            SubmitAction(Action::SwitchCharacter, static_cast<float>(row.characterIndex));
+            return;
+        }
         const ReloadPolicy policy{row.keepCurrentLoadout,row.resetActorSave,row.reloadOptions,row.actorSave,row.applyMissionSelection,row.missionSelection};
         if (row.action == Action::ReplayMission) { SubmitReplayWithPolicy(row.replay, policy); return; }
         if (row.action == Action::CompletePrimary) { SubmitCompletePrimary(row.primary); return; }
@@ -642,14 +787,14 @@ void Activate(const Row& row, int direction) {
         }
         float value = 0;
         if (row.action == Action::SetMaxHealth) value = healthLimit;
-        else if (row.action == Action::SwitchCharacter) value = static_cast<float>(character);
         else if (row.action >= Action::MoveXMinus && row.action <= Action::MoveZPlus) value = moveStep;
         SubmitAction(row.action, value);
     }
 }
 void Apply(MenuInput input, DWORD producer) {
-    if (input == MenuInput::Close) { InvalidateMenuSnapshot(); visible = false; RecordInput(input, producer); return; }
+    if (input == MenuInput::Close) { warpEditor = {}; InvalidateMenuSnapshot(); visible = false; RecordInput(input, producer); return; }
     if (input == MenuInput::Toggle) {
+        warpEditor = {};
         const bool opening = !visible;
         if (opening && node.rfind("dev", 0) == 0) { history.clear(); SetNode("debug", false); }
         InvalidateMenuSnapshot();
@@ -658,6 +803,23 @@ void Apply(MenuInput input, DWORD producer) {
         return;
     }
     if (!visible) return;
+    if (warpEditor.editing) {
+        const auto s = GetSnapshot();
+        if (node != "local.hero.warp" || !WarpReady(s) || !SameHeroWarpContext(warpEditor.captured, s.heroWarp)) {
+            warpEditor = {}; return;
+        }
+        if (input == MenuInput::Back) CancelWarpEdit();
+        else if (input == MenuInput::Accept) {
+            HeroWarpPosition position{};
+            if (ParseHeroWarpPosition(warpEditor.draft, position, warpEditor.status)) {
+                warpEditor.position = position; warpEditor.text = warpEditor.draft;
+                warpEditor.valid = true; warpEditor.editing = false; warpEditor.draft.clear();
+                warpEditor.status = L"Coordinates ready; choose Warp Hero to apply";
+            }
+        }
+        RecordInput(input, producer);
+        return;
+    }
     if (input == MenuInput::Back) {
         if (!history.empty()) { const auto parent = history.back(); history.pop_back(); SetNode(parent, false); }
         else if (node != "debug" && node != "dev") SetNode(node.rfind("dev", 0) == 0 ? "dev" : "debug", false);
@@ -736,6 +898,7 @@ std::string HintForRow(const Row& row, const Snapshot& s) {
         else if (option->missingAssets) hint = "The required scene data is absent from this build";
     }
     if (row.enabled && (row.kind == Kind::HealthValue || row.kind == Kind::StepValue || row.kind == Kind::Character)) hint = "Left / Right to change";
+    if (row.enabled && row.kind == Kind::Character) hint += "; use Switch character to apply";
     else if (row.kind == Kind::Toggle && row.enabled) hint = "Cross / Enter to toggle";
     else if (row.kind == Kind::Setting && row.enabled) {
         hint = "Left / Right to change";
@@ -748,6 +911,19 @@ std::string HintForRow(const Row& row, const Snapshot& s) {
         else if (row.settingId == "SpeedRun.AllowFastTravelDuringDialog") hint = "Allow fast travel during dialog; other fast-travel restrictions still apply";
         else if (row.settingId == "SpeedRun.AllowCharacterSwitchDuringDialog") hint = "Allow character switching during dialog; other switching restrictions still apply";
         if (hint == "Left / Right to change" && !row.sourceHelp.empty()) hint += "; " + row.sourceHelp;
+    }
+    if (row.kind == Kind::HeroScale && row.enabled) hint = "Left / Right: 0.025; range 0.100 to 10.000";
+    if (row.action == Action::ResetHeroScale) {
+        if (row.enabled) hint = "Restore this hero's original scale";
+        else if (s.engineActionsReady && s.heroScaleReady && !s.heroScaleOwned)
+            hint = "Change Hero Scale before using Reset scale";
+    }
+    if (row.kind == Kind::HeroWarpText || row.kind == Kind::HeroWarpAction) {
+        if (!WarpReady(s)) hint = !s.engineActionsReady ? "Waiting for the verified engine dispatcher" : Utf8(s.heroWarp.status);
+        else if (warpEditor.editing) hint = (warpEditor.status.empty() ? "" : Utf8(warpEditor.status) + "; ") +
+            "Type X, Y, Z; Backspace deletes; Enter saves; Escape cancels";
+        else if (row.kind == Kind::HeroWarpText) hint = "Cross / Enter: edit X, Y, Z; Warp Hero applies the saved location";
+        else hint = row.enabled ? "Cross / Enter: warp to the saved coordinates" : "Edit and save the location first";
     }
     if (node == "debug.reload_map") {
         const bool bound = row.kind == Kind::ReloadCheckpoint || row.action == Action::ReloadCheckpoint || row.action == Action::FullReload ||
@@ -811,15 +987,23 @@ void QueueMenuInput(MenuInput input) {
     if (input == MenuInput::Close) inputQueue.clear();
     if (inputQueue.size() < 64) inputQueue.push_back({input, GetCurrentThreadId()});
 }
+void QueueMenuText(wchar_t character) {
+    if (!visible || !NumericCsvCharacter(character)) return;
+    std::lock_guard lock(inputMutex);
+    if (inputQueue.size() < 64) inputQueue.push_back({MenuInput::Accept, GetCurrentThreadId(), character});
+}
 bool MenuVisible() { return visible.load(); }
 bool PumpMenuInput() {
     // Factory hooks are installed synchronously, while binding verification
     // completes on the worker. Publish the backend before reading snapshots.
     if (!uiReady.load()) return false;
     Keyboard();
-    std::deque<std::pair<MenuInput, DWORD>> inputs;
+    std::deque<MenuEvent> inputs;
     { std::lock_guard lock(inputMutex); inputs.swap(inputQueue); }
-    for (const auto& input : inputs) Apply(input.first, input.second);
+    for (const auto& input : inputs) {
+        if (input.text) ApplyMenuText(input.text);
+        else Apply(input.input, input.producer);
+    }
     return visible.load();
 }
 void RenderMenuFrame() {
@@ -870,7 +1054,8 @@ void RenderMenuFrame() {
         if (!row.value.empty() && !developer) Text(draw, font, size, column, y, row.value);
     }
     Text(draw, font, footerSize, std::max(16.0f, center - hintSize.x / 2), hintY, hint, hintWidth);
-    const std::string controls = "PS / F10: show/hide   D-pad: navigate   Cross: select   Circle: back   L1/R1: Debug / Dev";
+    const std::string controls = warpEditor.editing ? "Type coordinates   Backspace: delete   Enter: save   Escape: cancel" :
+        "PS / F10: show/hide   D-pad: navigate   Cross: select   Circle: back   L1/R1: Debug / Dev";
     Text(draw, font, footerSize, std::max(8.0f, center - Width(font, footerSize, controls) / 2), viewport.y - 50, controls);
     const std::string status = Utf8(s.status);
     Text(draw, font, footerSize, std::max(8.0f, center - Width(font, footerSize, status) / 2), viewport.y - 28, status);

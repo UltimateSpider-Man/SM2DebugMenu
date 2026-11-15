@@ -8,6 +8,10 @@
 #include "photo_mode_gate.h"
 #include "overlay.h"
 #include "flame_slot_contract.h"
+#include "mj_weapon_switch_contract.h"
+#include "flame_burn_runtime.h"
+#include "flame_loop_runtime.h"
+#include "flame_audio.h"
 
 #include <bcrypt.h>
 #include <psapi.h>
@@ -35,6 +39,7 @@ struct Command {
     std::wstring characterName{};
     ReloadState reload{};
     uint32_t checkpointKey = 0;
+    uint16_t mjWeaponSelectedItem = 0;
     PrimaryObjectiveState primary{};
     bool resetActorSave = false;
     ActorSaveState actorSave{};
@@ -47,6 +52,8 @@ struct Command {
     bool cameraShakeEnabled = false;
     bool applyMissionSelection = false;
     ReloadSelectionState missionSelection{};
+    HeroWarpState heroWarp{};
+    HeroWarpPosition warpPosition{};
 };
 struct LoadoutPreparation {
     const ReloadOptionsState* captured = nullptr;
@@ -83,6 +90,12 @@ void DescribeMissionReload(const MissionReloadPreparation& preparation,bool acce
 }
 struct HealthEdit { uintptr_t component = 0; uint32_t handle = 0; float original = 0, applied = 0; };
 struct Position { Vec3 value{}; uint32_t handle = 0; bool valid = false; };
+struct HeroScaleEdit {
+    uintptr_t actor = 0, transform = 0;
+    uint32_t handle = 0;
+    Vec3 original{};
+    float applied = 1.0f;
+};
 
 struct Bindings {
     uintptr_t base = 0, size = 0, text = 0, textSize = 0;
@@ -91,8 +104,11 @@ struct Bindings {
     uintptr_t healthFlags = 0;
     using SwitchCharacter = void (*)(void*, uint32_t, int, void*);
     using SetPosition = void (*)(void*, const Vec3*);
+    using SetBasis = void (*)(void*, const float*, Vec3*);
     SwitchCharacter switchCharacter = nullptr;
     SetPosition setPosition = nullptr;
+    SetPosition setScale = nullptr;
+    SetBasis setBasis = nullptr;
 } g;
 
 std::mutex stateMutex, commandMutex, logMutex, simulationMutex;
@@ -115,6 +131,7 @@ uint64_t startedAt = 0;
 std::filesystem::path outputPath;
 HealthEdit healthEdit;
 Position savedPosition, undoPosition;
+HeroScaleEdit heroScaleEdit;
 bool autoHeal = false;
 std::atomic<bool> settingsRestorePending{false};
 bool healthFlagsOriginal[4]{}, healthFlagsApplied[4]{}, healthFlagsEdited[4]{};
@@ -161,6 +178,10 @@ const char* NativeActionName(Action action) {
     case Action::ExitLobby: return "ExitLobby";
     case Action::CameraShake: return "CameraShake";
     case Action::EquipMJFlamethrower: return "EquipMJFlamethrower";
+    case Action::SwitchMJWeapon: return "SwitchMJWeapon";
+    case Action::SetHeroScale: return "SetHeroScale";
+    case Action::ResetHeroScale: return "ResetHeroScale";
+    case Action::HeroWarp: return "HeroWarp";
     default: return nullptr;
     }
 }
@@ -355,6 +376,19 @@ bool BindGame() {
     }
     if (FunctionStart(character)) g.switchCharacter = reinterpret_cast<Bindings::SwitchCharacter>(character);
     if (FunctionStart(positionSetter)) g.setPosition = reinterpret_cast<Bindings::SetPosition>(positionSetter);
+    // SceneObject::SetScale(Vec3), matched to the named 1.5 Engine export and
+    // the retail actor/scene setter. Its native path updates scale, basis and
+    // transform dirty state; writing only the visible matrix would bypass it.
+    const auto scaleSetter = UniquePattern("48 8B C4 48 89 58 18 57 48 81 EC 80 00 00 00 80 79 5F 00 48 8B FA C5 F8 29 70 E8 48 8B D9 C5 F8 29 78 D8 C5 78 29 40 C8 C5 78 29 48 B8 C5 78 29 50 A8 C5 7B 10 12 C4 63 29 21 52 08 20");
+    std::array<unsigned char,444> basisCode{};
+    uint64_t basisDigest = 14695981039346656037ull;
+    const bool basisRead = ReadBytes(g.base + 0x2cf64f0, basisCode.data(), basisCode.size());
+    for (const auto byte : basisCode) basisDigest = (basisDigest ^ byte) * 1099511628211ull;
+    if (scaleSetter == g.base + 0x2cf6af0 && FunctionStart(scaleSetter) && basisRead &&
+        basisDigest == 0xf018636bb61deb95ull && FunctionStart(g.base + 0x2cf64f0)) {
+        g.setScale = reinterpret_cast<Bindings::SetPosition>(scaleSetter);
+        g.setBasis = reinterpret_cast<Bindings::SetBasis>(g.base + 0x2cf64f0);
+    }
     Log("Core signatures verified against the supported retail build.");
     return true;
 }
@@ -527,6 +561,88 @@ bool GetPosition(uintptr_t actor, uint32_t handle, Vec3& position) {
     return ActorStillCurrent(actor, handle) && Read(actor, transform) && ReadAt(transform, 0x30, position) &&
         PlausiblePosition(position) && Read(actor, afterTransform) && afterTransform == transform && ActorStillCurrent(actor, handle);
 }
+bool ValidScale(const Vec3& value) {
+    const auto valid = [](float f) { return std::isfinite(f) && f >= 0.00001f && f <= 10000.0f; };
+    return valid(value.x) && valid(value.y) && valid(value.z);
+}
+bool ReadHeroScale(uintptr_t actor, uint32_t handle, uintptr_t& transform, Vec3& scale) {
+    uintptr_t after = 0;
+    return g.setScale && g.setBasis && ActorStillCurrent(actor, handle) && Read(actor, transform) &&
+        ReadAt(transform, 0x70, scale) && ValidScale(scale) &&
+        Read(actor, after) && transform == after && ActorStillCurrent(actor, handle);
+}
+bool ScaleMatches(const Vec3& value, float uniform) {
+    return value.x == uniform && value.y == uniform && value.z == uniform;
+}
+bool SetHeroScale(uintptr_t actor, uint32_t handle, float value) {
+    if (!EngineContextReady() || !std::isfinite(value) || value < 0.1f || value > 10.0f) return false;
+    uintptr_t transform = 0;
+    Vec3 before{};
+    if (!ReadHeroScale(actor, handle, transform, before)) return false;
+    // A different writer or actor invalidates restoration ownership. Capture
+    // that current value as the origin only after a new explicit user action.
+    if (heroScaleEdit.actor != actor || heroScaleEdit.handle != handle ||
+        heroScaleEdit.transform != transform || !ScaleMatches(before, heroScaleEdit.applied))
+        heroScaleEdit = {actor, transform, handle, before, value};
+    else heroScaleEdit.applied = value;
+    const Vec3 desired{value, value, value};
+    g.setScale(reinterpret_cast<void*>(transform), &desired);
+    uintptr_t afterTransform = 0;
+    Vec3 after{};
+    if (!ReadHeroScale(actor, handle, afterTransform, after) || afterTransform != transform || !ScaleMatches(after, value)) {
+        heroScaleEdit = {};
+        return false;
+    }
+    return true;
+}
+bool RestoreHeroScale(uintptr_t actor, uint32_t handle) {
+    if (!EngineContextReady()) return false;
+    if (!heroScaleEdit.actor) return true;
+    const auto owned = heroScaleEdit;
+    uintptr_t transform = 0;
+    Vec3 current{};
+    if (owned.actor != actor || owned.handle != handle ||
+        !ReadHeroScale(actor, handle, transform, current) || transform != owned.transform ||
+        !ScaleMatches(current, owned.applied)) {
+        heroScaleEdit = {};
+        return false;
+    }
+    heroScaleEdit = {};
+    g.setScale(reinterpret_cast<void*>(transform), &owned.original);
+    return true;
+}
+void TickHeroScale() {
+    if (!heroScaleEdit.actor || !EngineContextReady()) return;
+    uint32_t handle = 0;
+    const uintptr_t actor = CurrentActor(handle);
+    uintptr_t transform = 0;
+    Vec3 scale{};
+    if (actor != heroScaleEdit.actor || handle != heroScaleEdit.handle ||
+        !ReadHeroScale(actor, handle, transform, scale) || transform != heroScaleEdit.transform ||
+        !ScaleMatches(scale, heroScaleEdit.applied)) {
+        heroScaleEdit = {};
+        return;
+    }
+    // Match the original per-frame Hero scale behavior while retaining the
+    // current rotation. Avoid a setter call while the basis already matches.
+    std::array<float, 12> basis{};
+    if (!ReadBytes(transform, basis.data(), sizeof(basis))) { heroScaleEdit = {}; return; }
+    bool needsApply = false;
+    std::array<float,9> packed{};
+    for (size_t row = 0; row < 3; ++row) {
+        const auto i = row * 4;
+        const float length = std::sqrt(basis[i]*basis[i] + basis[i+1]*basis[i+1] + basis[i+2]*basis[i+2]);
+        if (!std::isfinite(length) || length < 0.00001f) { heroScaleEdit = {}; return; }
+        needsApply |= std::fabs(length - heroScaleEdit.applied) > 0.0001f;
+        const float ratio = heroScaleEdit.applied / length;
+        for (size_t axis = 0; axis < 3; ++axis) packed[row*3+axis] = basis[i+axis] * ratio;
+    }
+    if (needsApply && ActorStillCurrent(actor, handle)) {
+        // The source's Mat3 setter dirties changed basis even when the cached
+        // scale is unchanged; SetScale alone would skip that notification.
+        g.setBasis(reinterpret_cast<void*>(transform), packed.data(), reinterpret_cast<Vec3*>(transform + 0x70));
+    }
+}
 std::vector<std::string> Characters(uintptr_t actor, uint32_t handle, uintptr_t& manager) {
     std::vector<std::string> names;
     manager = Component(actor, handle, "HeroCharacterManager");
@@ -673,10 +789,10 @@ bool FlameTanksEquipped(uintptr_t actor,uint32_t handle) {
     uint32_t inventoryHandle=0,itemHandle=0,afterHandle=0,category=0,quantity=0;
     uint64_t asset=0;
     if (!Read(manager,vtable) || vtable!=g.base+0x54792d8 ||
-        !ReadAt(manager,0x2128,inventoryHandle)) return false;
+        !ReadAt(manager,0x2128,inventoryHandle)) return FlameStageFailure("tank inventory manager/handle");
     const auto inventory=FlameComponentHandle(inventoryHandle);
     if (!Read(inventory,vtable) || vtable!=g.base+0x547a7d8 ||
-        !ReadAt(vtable,0x198,lookup) || lookup!=g.base+0x34c0460) return false;
+        !ReadAt(vtable,0x198,lookup) || lookup!=g.base+0x34c0460) return FlameStageFailure("tank vanity inventory type/lookup");
     const auto item=reinterpret_cast<uintptr_t (*)(void*,uint64_t)>(lookup)(
         reinterpret_cast<void*>(inventory),FlameTanksItemAsset);
     // VanityItem has its own embedded identity at +0x100. Check the tiny native
@@ -691,37 +807,41 @@ bool FlameTanksEquipped(uintptr_t actor,uint32_t handle) {
         !ReadAt(item,0xf8,owner) || owner!=inventory ||
         !ReadAt(item,0x88,category) || category!=7 ||
         !ReadAt(item,0x130,asset) || asset!=FlameTanksItemAsset ||
-        !ReadAt(item,0x138,quantity) || quantity!=1) return false;
+        !ReadAt(item,0x138,quantity) || quantity!=1) return FlameStageFailure("tank item type/identity/owner");
     const auto config=reinterpret_cast<uintptr_t (*)(void*)>(g.base+0x34b1350)(reinterpret_cast<void*>(item));
     uintptr_t name=0,models=0;
     uint32_t configCategory=0,partType=0,modelCount=0;
     unsigned char updateChildren=0;
     uint64_t modelAsset=0;
-    return FlameDDLPointer(Offset(config,0x30),name) && ReadName(name)=="MJFlamethrowerTanks" &&
+    const bool verified=FlameDDLPointer(Offset(config,0x30),name) && ReadName(name)=="MJFlamethrowerTanks" &&
         ReadAt(config,0x80,configCategory) && configCategory==21 &&
         ReadAt(config,0x8c,partType) && partType==74 &&
         ReadAt(config,0x95,updateChildren) && updateChildren==1 &&
         FlameDDLPointer(Offset(config,0x98),models) && ReadAt(config,0xa0,modelCount) && modelCount==1 &&
-        ReadAt(models,0x1c,modelAsset) && modelAsset==FlameTanksModelAsset &&
+        // Model is an embedded AssetReferenceDef; its AssetPath holds the ID.
+        ReadAt(models,0x3c,modelAsset) && modelAsset==FlameTanksModelAsset &&
         ReadAt(manager,0x2128,afterHandle) && afterHandle==inventoryHandle &&
         FlameComponentHandle(inventoryHandle)==inventory && FlameComponentHandle(itemHandle)==item &&
         ActorStillCurrent(actor,handle);
+    return verified || FlameStageFailure("tank config/model/freshness");
 }
-bool ReadFlameInventory(uintptr_t actor,uint32_t handle,FlameInventoryState& value) {
+bool ReadOwnedMJWeapon(uintptr_t actor,uint32_t handle,const mj_weapon_switch::Identity& identity,
+                       FlameInventoryState& value,bool diagnostic=true) {
     value={};
-    if (!EngineContextReady() || !ActorStillCurrent(actor,handle)) return FlameStageFailure("current actor/context");
+    const auto fail=[&](const char* stage){return diagnostic ? FlameStageFailure(stage) : false;};
+    if (!EngineContextReady() || !ActorStillCurrent(actor,handle) || !FlameSlotCode()) return fail("current actor/context/code");
     value.manager=Component(actor,handle,"ItemInventory");
     uintptr_t vtable=0,lookup=0,identityGetter=0,owner=0,pending=0;
     if (!Read(value.manager,vtable) || vtable!=g.base+0x54792d8 ||
-        !ReadAt(value.manager,0x2118,value.inventoryHandle)) return FlameStageFailure("inventory manager/child handle");
+        !ReadAt(value.manager,0x2118,value.inventoryHandle)) return fail("inventory manager/child handle");
     value.inventory=FlameComponentHandle(value.inventoryHandle);
     // This child belongs to the native persistent inventory actor, which can
     // differ from the current hero. The current manager's handle owns the link.
     if (!Read(value.inventory,vtable) || vtable!=g.base+0x5478588 ||
         !ReadAt(vtable,0x198,lookup) || lookup!=g.base+0x34c0460 ||
-        !ReadAt(value.inventory,0x2390,pending) || pending) return FlameStageFailure("equipped handle/type or pending operation");
+        !ReadAt(value.inventory,0x2390,pending) || pending) return fail("equipped handle/type or pending operation");
     value.item=reinterpret_cast<uintptr_t (*)(void*,uint64_t)>(lookup)(
-        reinterpret_cast<void*>(value.inventory),flame_slot::ItemAsset);
+        reinterpret_cast<void*>(value.inventory),identity.itemAsset);
     if (!Read(value.item,vtable) || vtable!=g.base+0x547afa8 ||
         !ReadAt(vtable,0x120,identityGetter) || identityGetter!=g.base+0x14bd040 ||
         !ReadAt(value.item,0x1c,value.itemHandle) || FlameComponentHandle(value.itemHandle)!=value.item ||
@@ -729,34 +849,39 @@ bool ReadFlameInventory(uintptr_t actor,uint32_t handle,FlameInventoryState& val
         !ReadAt(value.item,0x88,value.contract.category) ||
         !ReadAt(value.item,0x178,value.contract.asset) ||
         !ReadAt(value.item,0x180,value.contract.quantity) ||
-        !ReadAt(value.item,0x184,value.contract.id) || value.contract.asset!=flame_slot::ItemAsset ||
+        !ReadAt(value.item,0x184,value.contract.id) || value.contract.asset!=identity.itemAsset ||
         value.contract.category!=3 || value.contract.quantity!=1 || !value.contract.id)
-        return FlameStageFailure("M2 item type/handle/identity/owner");
+        return fail("MJ weapon item type/handle/identity/owner");
     // Both pinned getters only resolve preloaded typed assets. In particular,
     // the slot mutator assumes a non-null WeaponConfigGame, so check it first.
     const auto itemConfig=reinterpret_cast<uintptr_t (*)(void*)>(g.base+0x34b1350)(
         reinterpret_cast<void*>(value.item));
     value.config=reinterpret_cast<uintptr_t (*)(void*)>(g.base+0x14bd640)(
         reinterpret_cast<void*>(value.item));
-    uintptr_t itemName=0,weaponName=0;
+    uintptr_t itemName=0,weaponName=0; uint64_t configAsset=0;
     if (!ReadAt(itemConfig,0x224,value.contract.weaponAsset) ||
-        !FlameDDLPointer(Offset(itemConfig,0x30),itemName) || ReadName(itemName)!="MJFlamethrower" ||
-        !FlameDDLPointer(Offset(value.config,0x30),weaponName) || ReadName(weaponName)!="MJFlamethrower" ||
+        !FlameDDLPointer(Offset(itemConfig,0x30),itemName) || ReadName(itemName)!=identity.name ||
+        !ReadAt(value.config,8,configAsset) || configAsset!=identity.weaponAsset ||
+        !FlameDDLPointer(Offset(value.config,0x30),weaponName) || ReadName(weaponName)!=identity.name ||
         !ReadAt(value.config,0x118,value.contract.slotType) ||
         !ReadAt(value.config,0x11c,value.contract.anyHeldSlot) ||
-        !ReadAt(value.config,0x120,value.contract.heldSlot) || !flame_slot::Admits(value.contract) ||
-        !ReadAt(value.inventory,0x21e0,value.slots.selected)) return FlameStageFailure("typed config/name/held slot");
+        !ReadAt(value.config,0x120,value.contract.heldSlot) || !mj_weapon_switch::Admits(value.contract,identity) ||
+        !ReadAt(value.inventory,0x21e0,value.slots.selected)) return fail("typed config/name/held slot");
     for (size_t i=0;i<value.slots.items.size();++i)
-        if (!ReadAt(value.inventory,0x21f8+i*0x18,value.slots.items[i])) return FlameStageFailure("held-slot readback");
+        if (!ReadAt(value.inventory,0x21f8+i*0x18,value.slots.items[i])) return fail("held-slot readback");
     uint32_t afterHandle=0;
     const bool stable=flame_slot::Valid(value.slots,value.contract.id) &&
         ReadAt(value.manager,0x2118,afterHandle) && afterHandle==value.inventoryHandle &&
         FlameComponentHandle(value.inventoryHandle)==value.inventory &&
         FlameComponentHandle(value.itemHandle)==value.item && ReadAt(value.inventory,0x2390,pending) && !pending &&
         ActorStillCurrent(actor,handle);
-    return stable || FlameStageFailure("inventory capture freshness");
+    return stable || fail("inventory capture freshness");
 }
-bool FlameWeaponSelected(uintptr_t actor,uint32_t handle,const FlameInventoryState& inventory) {
+bool ReadFlameInventory(uintptr_t actor,uint32_t handle,FlameInventoryState& value) {
+    return ReadOwnedMJWeapon(actor,handle,mj_weapon_switch::M2,value);
+}
+bool MJWeaponSelected(uintptr_t actor,uint32_t handle,const FlameInventoryState& inventory,
+                      const mj_weapon_switch::Identity& identity) {
     const auto manager=Component(actor,handle,"HeroWeaponManager");
     uintptr_t vtable=0;
     uint32_t selected=0,count=0;
@@ -774,10 +899,387 @@ bool FlameWeaponSelected(uintptr_t actor,uint32_t handle,const FlameInventorySta
         const auto weapon=FlameComponentHandle(componentHandle);
         return ReadAt(manager,0x8f1,flags) && (!(flags&0x10) ||
             (ReadAt(manager,0x8d0,overrideWeapon) && overrideWeapon==weapon)) &&
-            Read(weapon,vtable) && vtable==g.base+0x5323378 &&
+            Read(weapon,vtable) && vtable==g.base+identity.weaponVtable &&
             ReadAt(weapon,0x48,config) && config==inventory.config && ActorStillCurrent(actor,handle);
     }
     return false;
+}
+bool FlameWeaponSelected(uintptr_t actor,uint32_t handle,const FlameInventoryState& inventory) {
+    return MJWeaponSelected(actor,handle,inventory,mj_weapon_switch::M2);
+}
+struct MJWeaponPair { FlameInventoryState m2,sonic; uint16_t selected=0; };
+bool SameMJWeapon(const FlameInventoryState& a,const FlameInventoryState& b) {
+    return a.manager==b.manager && a.inventory==b.inventory && a.item==b.item && a.config==b.config &&
+        a.inventoryHandle==b.inventoryHandle && a.itemHandle==b.itemHandle && a.contract.id==b.contract.id;
+}
+bool ReadMJWeaponPair(uintptr_t actor,uint32_t handle,MJWeaponPair& value,bool diagnostic=true) {
+    value={};
+    if (!ReadOwnedMJWeapon(actor,handle,mj_weapon_switch::M2,value.m2,diagnostic) ||
+        !ReadOwnedMJWeapon(actor,handle,mj_weapon_switch::Sonic,value.sonic,diagnostic) ||
+        value.m2.manager!=value.sonic.manager || value.m2.inventory!=value.sonic.inventory ||
+        value.m2.inventoryHandle!=value.sonic.inventoryHandle || value.m2.contract.id==value.sonic.contract.id ||
+        value.m2.slots.items!=value.sonic.slots.items || value.m2.slots.selected!=value.sonic.slots.selected) return false;
+    if (MJWeaponSelected(actor,handle,value.m2,mj_weapon_switch::M2)) value.selected=value.m2.contract.id;
+    else if (MJWeaponSelected(actor,handle,value.sonic,mj_weapon_switch::Sonic)) value.selected=value.sonic.contract.id;
+    return value.selected && mj_weapon_switch::Plan(value.m2.contract,value.sonic.contract,value.m2.slots,
+        value.selected,value.selected)!=mj_weapon_switch::Target::None && ActorStillCurrent(actor,handle);
+}
+
+// Only the verified engine callback owns these borrowed native identities.
+// Retired guns remain under observation until their generation is destroyed;
+// this also catches an effect whose asynchronous load finishes after release.
+struct FlameLoopBinding {
+    uintptr_t actor=0,manager=0,entry=0,weapon=0,config=0,gun=0,conduit=0;
+    uint32_t actorHandle=0,managerHandle=0,weaponHandle=0,gunHandle=0,conduitHandle=0,itemId=0;
+    ReloadToken world{};
+    flame_loop::Gate gate{};
+    bool retired=false;
+};
+std::array<FlameLoopBinding,4> flameLoops{};
+bool flameLoopCodeReady=false;
+std::atomic<bool> flameBurnReady{false},flameBurnDrained{true};
+ReloadToken flameBurnWorld{};
+uintptr_t flameBurnActor=0;
+uint32_t flameBurnActorHandle=0;
+uint64_t flameBurnWorldSerial=0;
+bool flameBurnWorldLive=false;
+std::atomic<uint64_t> flameGateEpoch{0};
+unsigned flameDiscoveryAttempts=0;
+constexpr uint64_t FlameLoopAsset=0x885fedab012ac7f4ull;
+bool FlameLoopCode() {
+    // native-loop-control-contract.json: complete Kill function, including its
+    // chained unwind fragments; the scene resolver is reproduced read-only.
+    std::array<unsigned char,368> bytes{};
+    if (!g.base || !ReadBytes(g.base+0x2ddaf70,bytes.data(),bytes.size())) return false;
+    uint64_t digest=14695981039346656037ull;
+    for (auto byte:bytes) digest=(digest^byte)*1099511628211ull;
+    return digest==0x336bd25c138f0f4bull;
+}
+bool FlameActorIdentity(uintptr_t actor,uint32_t handle) {
+    uintptr_t pool=0; uint32_t count=0,index=0; uint16_t generation=0;
+    return handle && (handle>>20) && Read(g.actorPool,pool) && Read(g.actorCount,count) &&
+        count<=(1u<<20) && (handle&0xfffff)<count && Element(pool,handle&0xfffff,0xc0)==actor &&
+        ReadAt(actor,8,generation) && generation==((handle>>20)&0x7ff) &&
+        ReadAt(actor,0xc,index) && (index&0xfffff)==(handle&0xfffff);
+}
+bool FlameLoopOwner(const FlameLoopBinding& binding) {
+    uintptr_t vtable=0,owner=0,config=0; uint32_t user=0; uint64_t asset=0;
+    return binding.weapon && FlameActorIdentity(binding.gun,binding.gunHandle) &&
+        FlameComponentHandle(binding.weaponHandle)==binding.weapon &&
+        Read(binding.weapon,vtable) && vtable==g.base+0x5323378 &&
+        ReadAt(binding.weapon,0x10,owner) && owner==binding.gun &&
+        ReadAt(binding.weapon,0x48,config) && config==binding.config &&
+        ReadAt(config,8,asset) && asset==flame_slot::WeaponAsset &&
+        ReadAt(binding.weapon,0x5b0,user) && user==binding.actorHandle &&
+        FlameComponentHandle(binding.conduitHandle)==binding.conduit &&
+        Read(binding.conduit,vtable) && vtable==g.base+0x5d2f0e8 &&
+        ReadAt(binding.conduit,0x10,owner) && owner==binding.gun;
+}
+bool FlameLoopWorld(const ReloadToken& token) {
+    uintptr_t manager=0,level=0,mode=0,vtable=0; uint32_t kernelHandle=0;
+    int stateValue=0,pending=0; unsigned char ready=0; uint16_t sequence=0; uint64_t asset=0;
+    return Read(g.base+0xc2266a8,manager) && manager==token.manager &&
+        Read(manager,vtable) && vtable==token.managerVtable &&
+        ReadAt(manager,0x10,level) && level==token.loadedLevel &&
+        ReadAt(manager,0x430628,stateValue) && stateValue==22 &&
+        ReadAt(manager,0x199fc0,pending) && pending==0 &&
+        ReadAt(manager,0x319f68,pending) && pending==0 &&
+        ReadAt(manager,0x430665,ready) && ready==1 &&
+        Read(g.base+0xc21d330,mode) && mode==token.mode &&
+        ReadAt(mode,0x10,stateValue) && stateValue==9 &&
+        Read(g.base+0xc21d630,kernelHandle) && kernelHandle==token.kernelHandle &&
+        FlameComponentHandle(kernelHandle)==token.kernel &&
+        ReadAt(token.kernel,0x58,asset) && asset==token.levelAsset &&
+        ReadAt(token.kernel,0x62f0,sequence) && sequence==token.kernelSequence &&
+        ReadAt(token.kernel,0x6308,ready) && ready==3;
+}
+bool FlameLoopSelected(const FlameLoopBinding& binding) {
+    uintptr_t vtable=0,owner=0,overrideWeapon=0; uint32_t selected=0,id=0,weaponHandle=0;
+    unsigned char flags=0;
+    return ActorStillCurrent(binding.actor,binding.actorHandle) &&
+        FlameComponentHandle(binding.managerHandle)==binding.manager &&
+        Read(binding.manager,vtable) && (vtable==g.base+0x5430c08 || vtable==g.base+0x5430f38 || vtable==g.base+0x5431198) &&
+        ReadAt(binding.manager,0x10,owner) && owner==binding.actor &&
+        ReadAt(binding.manager,0x6c,selected) && selected==binding.itemId &&
+        ReadAt(binding.entry,0x14,id) && id==selected &&
+        ReadAt(binding.entry,0x10,weaponHandle) && weaponHandle==binding.weaponHandle &&
+        ReadAt(binding.manager,0x8f1,flags) && (!(flags&0x10) ||
+            (ReadAt(binding.manager,0x8d0,overrideWeapon) && overrideWeapon==binding.weapon));
+}
+uintptr_t BurnActor(uint32_t handle) {
+    uintptr_t pool=0,afterPool=0; uint32_t count=0,afterCount=0;
+    if (!handle || (handle&0x80000000u) || !Read(g.actorPool,pool) || !Read(g.actorCount,count) ||
+        count>(1u<<20) || (handle&0xfffff)>=count) return 0;
+    const auto actor=Element(pool,handle&0xfffff,0xc0);
+    if (!FlameActorIdentity(actor,handle) || !Read(g.actorPool,afterPool) || afterPool!=pool ||
+        !Read(g.actorCount,afterCount) || afterCount!=count) return 0;
+    return actor;
+}
+uintptr_t BurnFind(uintptr_t actor,uintptr_t descriptor) {
+    // A verified empty lookup is0; unreadable storage is explicitly different.
+    // Only the four exact native component types used by this feature qualify.
+    constexpr auto invalid=~uintptr_t{0};
+    if (descriptor!=g.base+0xb87ca20 && descriptor!=g.base+0xb877d70 &&
+        descriptor!=g.base+0xb6a1e80 && descriptor!=g.base+0xad6ec60) return invalid;
+    // Native150b98d tests the complete capacity WORD. Reading one byte would
+    // misclassify capacities256 and512 as the small-container layout.
+    uint16_t generation=0,large=0,afterLarge=0; uint32_t index=0;
+    if (!ReadAt(actor,8,generation) || !generation || generation>0x7ff ||
+        !ReadAt(actor,0xc,index) || !ReadAt(actor,0x88,large)) return invalid;
+    const auto handle=(index&0xfffff)|(static_cast<uint32_t>(generation)<<20);
+    if (BurnActor(handle)!=actor) return invalid;
+    uintptr_t entries=0,afterEntries=0,result=0; uint16_t count=0,afterCount=0;
+    const auto container=Offset(actor,large ? 0x80 : 0x58);
+    const size_t entriesOffset=large ? 0 : 0x10,countOffset=large ? 8 : 0x18;
+    if (!ReadAt(container,entriesOffset,entries) || !ReadAt(container,countOffset,count) ||
+        (large && (!count || count>32768 || (count&(count-1)))) || (!large && count>4096) ||
+        (count && !entries)) return invalid;
+    size_t bucket=large ? (descriptor>>4)&(count-1) : 0;
+    for (size_t visited=0;visited<count;++visited) {
+        ComponentEntry entry{};
+        if (!Read(Element(entries,bucket,sizeof(ComponentEntry)),entry)) return invalid;
+        if (entry.info==descriptor) {result=entry.component;break;}
+        if (large && !entry.info) break;
+        bucket=large ? (bucket+1)&(count-1) : bucket+1;
+    }
+    uintptr_t owner=0;
+    if (!ReadAt(container,entriesOffset,afterEntries) || entries!=afterEntries ||
+        !ReadAt(container,countOffset,afterCount) || count!=afterCount ||
+        !ReadAt(actor,0x88,afterLarge) || afterLarge!=large || BurnActor(handle)!=actor ||
+        (result && (!ReadAt(result,0x10,owner) || owner!=actor))) return invalid;
+    return result;
+}
+bool BurnSourceValid(const flame_burn::Source& source) {
+    if (!EngineContextReady() || !flameBurnWorldLive || source.world!=flameBurnWorldSerial ||
+        source.actor!=flameBurnActor || source.actorHandle!=flameBurnActorHandle ||
+        !FlameLoopWorld(flameBurnWorld) || !ActorStillCurrent(source.actor,source.actorHandle)) return false;
+    for (const auto& binding:flameLoops) {
+        if (!binding.retired && binding.actor==source.actor && binding.actorHandle==source.actorHandle &&
+            binding.weapon==source.weapon && binding.weaponHandle==source.weaponHandle &&
+            binding.config==source.config && binding.itemId==source.item &&
+            FlameLoopOwner(binding) && FlameLoopWorld(binding.world)) return true;
+    }
+    return false;
+}
+void TickFlameBurn() {
+    if (!flameBurnReady.load(std::memory_order_acquire)) return;
+    if (shutdownReset.load() || stopping.load()) {
+        flame_burn::RequestStop();
+        flameBurnDrained.store(flame_burn::DrainOnEngineThread(),std::memory_order_release);
+        return;
+    }
+    if (flameBurnWorldLive && (!FlameLoopWorld(flameBurnWorld) ||
+        !ActorStillCurrent(flameBurnActor,flameBurnActorHandle))) {
+        flameBurnWorldLive=false;
+        ++flameBurnWorldSerial;
+    }
+    flame_burn::Source source{};
+    for (const auto& binding:flameLoops) {
+        if (!binding.weapon || binding.retired || !FlameLoopOwner(binding) ||
+            !ActorStillCurrent(binding.actor,binding.actorHandle) || !FlameLoopWorld(binding.world) ||
+            !binding.itemId || binding.itemId>65535) continue;
+        if (!flameBurnWorldLive) {
+            flameBurnWorld=binding.world;flameBurnActor=binding.actor;
+            flameBurnActorHandle=binding.actorHandle;flameBurnWorldLive=true;
+            if (!++flameBurnWorldSerial) ++flameBurnWorldSerial;
+        }
+        source={flameBurnWorldSerial,binding.actor,binding.weapon,binding.config,
+            binding.actorHandle,binding.weaponHandle,0,static_cast<uint16_t>(binding.itemId)};
+        // WeaponGame::GetNameHash, not the unrelated mapped Fire input hash.
+        if (!ReadAt(binding.weapon,0x610,source.nameHash) || !source.nameHash) source={};
+        break;
+    }
+    // A committed M2 projectile may hit after holstering. Exact damage-event
+    // source checks distinguish it from subsequent Sonic shots and native DoT.
+    flame_burn::EngineTick(source.world ? &source : nullptr,flameBurnWorldLive ? flameBurnWorldSerial : 0);
+    const auto observed=flame_burn::Status();
+    flameBurnDrained.store(!observed.owned && !observed.inFlight,std::memory_order_release);
+    static uint64_t nextLog=0;
+    static flame_burn::Counters previous{};
+    static const char* previousFailure=nullptr;
+    const auto now=GetTickCount64();
+    if (now<nextLog) return;
+    nextLog=now+1000;
+    const auto failure=flame_burn::LastFailure();
+    if (observed.accepted!=previous.accepted || observed.applied!=previous.applied ||
+        observed.dropped!=previous.dropped || observed.owned!=previous.owned || failure!=previousFailure) {
+        Log("M2 burn: accepted="+std::to_string(observed.accepted)+" applied="+std::to_string(observed.applied)+
+            " dropped="+std::to_string(observed.dropped)+" created="+std::to_string(observed.created)+
+            " retired="+std::to_string(observed.retired)+" owned="+std::to_string(observed.owned)+
+            " status="+failure);
+        previous=observed;previousFailure=failure;
+    }
+}
+uintptr_t FlameScene(uint32_t handle) {
+    uintptr_t pool=0,scene=0,afterPool=0,afterScene=0;
+    uint32_t count=0,afterCount=0; unsigned char generation=0,type=0,afterGeneration=0;
+    const auto index=handle&0xffffff; const auto expected=handle>>24;
+    if (!expected || !Read(g.base+0xc0bdbc8,pool) || !Read(g.base+0xc0bdbe4,count) ||
+        count>(1u<<24) || index>=count) return 0;
+    const auto entry=Element(pool,index,16);
+    if (!Read(entry,scene) || !ReadAt(entry,8,generation) || generation!=expected ||
+        (scene>=pool && scene<Element(pool,count,16)) ||
+        !ReadAt(scene,0x5f,type) || type!=5 ||
+        !Read(g.base+0xc0bdbc8,afterPool) || afterPool!=pool ||
+        !Read(g.base+0xc0bdbe4,afterCount) || afterCount!=count ||
+        !Read(entry,afterScene) || afterScene!=scene ||
+        !ReadAt(entry,8,afterGeneration) || afterGeneration!=generation) return 0;
+    return scene;
+}
+unsigned StopFlameLoop(const FlameLoopBinding& binding) {
+    unsigned killed=0;
+    if (!EngineContextReady() || !flameLoopCodeReady || !FlameLoopOwner(binding)) return killed;
+    uintptr_t entries=0; uint32_t count=0;
+    if (!ReadAt(binding.conduit,0x240,entries) || !ReadAt(binding.conduit,0x248,count) || count>64) return killed;
+    for (uint32_t i=0;i<count;++i) {
+        const auto slot=Element(entries,i,24); uint32_t handle=0,afterHandle=0,afterCount=0;
+        uintptr_t resource=0,afterResource=0,afterEntries=0; uint64_t asset=0,flags=0;
+        if (!ReadAt(slot,8,handle)) return killed;
+        const auto scene=FlameScene(handle);
+        if (!scene || !ReadAt(scene,0x128,resource) || !ReadAt(resource,8,asset) || asset!=FlameLoopAsset ||
+            !ReadAt(scene,0x198,flags) || (flags&0x200000000ull)) continue;
+        // Revalidate the owning gun, list slot and scene generation immediately
+        // before calling the same native destructor request as kVFX Start=-1.
+        if (!FlameLoopOwner(binding) || !ReadAt(binding.conduit,0x240,afterEntries) || afterEntries!=entries ||
+            !ReadAt(binding.conduit,0x248,afterCount) || afterCount!=count ||
+            !ReadAt(slot,8,afterHandle) || afterHandle!=handle || FlameScene(handle)!=scene ||
+            !ReadAt(scene,0x128,afterResource) || afterResource!=resource ||
+            !ReadAt(resource,8,asset) || asset!=FlameLoopAsset || !FlameLoopCode()) return killed;
+        reinterpret_cast<void (*)(void*)>(g.base+0x2ddaf70)(reinterpret_cast<void*>(scene));
+        ++killed;
+    }
+    return killed;
+}
+FlameLoopBinding* FlameLoopDestination(const FlameLoopBinding& binding) {
+    // Reuse a retired identity before any free slot, otherwise its old monitor
+    // could keep killing the newly rearmed copy of the very same native gun.
+    for (auto& cached:flameLoops)
+        if (cached.weapon==binding.weapon && cached.weaponHandle==binding.weaponHandle) return &cached;
+    for (auto& cached:flameLoops)
+        if (!cached.weapon || !FlameLoopOwner(cached)) return &cached;
+    return nullptr;
+}
+bool ArmFlameLoop(uintptr_t actor,uint32_t handle,const ReloadState& world,const FlameInventoryState& inventory) {
+    if (!EngineContextReady() || !flameLoopCodeReady || !world.ready || !FlameLoopCode() ||
+        !FlameWeaponSelected(actor,handle,inventory)) return false;
+    FlameLoopBinding binding{};
+    binding.actor=actor; binding.actorHandle=handle; binding.config=inventory.config;
+    binding.itemId=inventory.contract.id; binding.world=world.token;
+    binding.manager=Component(actor,handle,"HeroWeaponManager");
+    uint32_t count=0;
+    if (!ReadAt(binding.manager,0x1c,binding.managerHandle) || !ReadAt(binding.manager,0x740,count) || count>48) return false;
+    for (uint32_t i=0;i<count;++i) {
+        const auto entry=Element(Offset(binding.manager,0x200),i,0x1c); uint32_t id=0;
+        if (!ReadAt(entry,0x14,id)) return false;
+        if (id!=binding.itemId) continue;
+        binding.entry=entry;
+        if (!ReadAt(entry,0x10,binding.weaponHandle)) return false;
+        binding.weapon=FlameComponentHandle(binding.weaponHandle);
+        break;
+    }
+    uint16_t generation=0; uint32_t index=0; unsigned char large=0;
+    if (!binding.weapon || !ReadAt(binding.weapon,0x10,binding.gun) ||
+        !ReadAt(binding.gun,8,generation) || !ReadAt(binding.gun,0xc,index)) return false;
+    binding.gunHandle=((generation&0x7ffu)<<20)|(index&0xfffff);
+    if (!FlameActorIdentity(binding.gun,binding.gunHandle) || !ReadAt(binding.gun,0x88,large)) return false;
+    binding.conduit=large ? LargeComponent(binding.gun,g.base+0xbae5410) : SmallComponent(binding.gun,g.base+0xbae5410);
+    if (!ReadAt(binding.conduit,0x1c,binding.conduitHandle) || !FlameLoopOwner(binding) ||
+        !FlameLoopSelected(binding) || !FlameLoopWorld(binding.world)) return false;
+    for (auto& cached:flameLoops) {
+        if (cached.weapon==binding.weapon && cached.weaponHandle==binding.weaponHandle &&
+            cached.actorHandle==handle && !cached.retired) return true;
+    }
+    if (auto* cached=FlameLoopDestination(binding)) {
+        uint32_t frame=0; double time=0;
+        if (!ReadAt(binding.weapon,0x1ac,frame) || !ReadAt(binding.weapon,0x198,time) || !std::isfinite(time)) return false;
+        binding.gate.Observe(false,frame,time,GetTickCount64()); *cached=binding;
+        Log("M2 loop: exact selected weapon armed, handle="+std::to_string(binding.weaponHandle));
+        return true;
+    }
+    Log("M2 loop: monitor capacity occupied by live native guns; new assignment not armed.");
+    return false;
+}
+bool ReserveFlameLoopSlot(uintptr_t actor,uint32_t handle) {
+    for (auto& cached:flameLoops) {
+        if (!cached.weapon || !FlameLoopOwner(cached)) {
+            cached={}; cached.actor=actor; cached.actorHandle=handle;
+            return true;
+        }
+        uint32_t id=0,component=0;
+        if (cached.actor==actor && cached.actorHandle==handle &&
+            ReadAt(cached.entry,0x14,id) && id==cached.itemId &&
+            ReadAt(cached.entry,0x10,component) && component==cached.weaponHandle) return true;
+    }
+    return false;
+}
+void DiscoverFlameLoop(uintptr_t actor,uint32_t handle,bool visible) {
+    // Cache the manager once per hero. Its cheap selected-slot observation
+    // covers arbitrarily late weapon streaming, without full hidden snapshots.
+    static uint32_t prior=0;
+    static uintptr_t manager=0; static uint32_t managerHandle=0;
+    if (prior!=handle) { prior=handle; manager=0; managerHandle=0; flameDiscoveryAttempts=30; }
+    if (!actor || !handle || !EngineContextReady() || !flameLoopCodeReady || shutdownReset) return;
+    uintptr_t owner=0,vtable=0;
+    if (!manager || FlameComponentHandle(managerHandle)!=manager) {
+        manager=0; managerHandle=0;
+        if (!visible && !flameDiscoveryAttempts) return;
+        if (flameDiscoveryAttempts) --flameDiscoveryAttempts;
+        manager=Component(actor,handle,"HeroWeaponManager");
+        if (!ReadAt(manager,0x1c,managerHandle)) { manager=0; return; }
+    }
+    uint32_t selected=0,count=0;
+    if (!Read(manager,vtable) || (vtable!=g.base+0x5430c08 && vtable!=g.base+0x5430f38 && vtable!=g.base+0x5431198) ||
+        !ReadAt(manager,0x10,owner) || owner!=actor || !ReadAt(manager,0x6c,selected) ||
+        !ReadAt(manager,0x740,count) || count>48) return;
+    bool candidate=false; uintptr_t candidateWeapon=0; uint32_t candidateHandle=0;
+    for (uint32_t i=0;i<count;++i) {
+        const auto entry=Element(Offset(manager,0x200),i,0x1c); uint32_t id=0,component=0;
+        uintptr_t weapon=0,vtable=0,config=0; uint64_t asset=0;
+        if (!ReadAt(entry,0x14,id) || id!=selected || !ReadAt(entry,0x10,component)) continue;
+        weapon=FlameComponentHandle(component);
+        candidate=Read(weapon,vtable) && vtable==g.base+0x5323378 && ReadAt(weapon,0x48,config) &&
+            ReadAt(config,8,asset) && asset==flame_slot::WeaponAsset;
+        candidateWeapon=weapon; candidateHandle=component;
+        break;
+    }
+    if (!candidate) return;
+    for (const auto& cached:flameLoops)
+        if (cached.weapon==candidateWeapon && cached.weaponHandle==candidateHandle && !cached.retired) return;
+    uintptr_t system=0; FlameInventoryState inventory;
+    if (!FlameLoadoutReady(actor,handle,system) || !ReadFlameInventory(actor,handle,inventory)) return;
+    const auto world=ReadReloadState();
+    (void)ArmFlameLoop(actor,handle,world,inventory);
+}
+void TickFlameLoops() {
+    bool active=false; unsigned killed=0;
+    static uint64_t priorEpoch=0;
+    const auto epoch=flameGateEpoch.load(); const bool visibilityChanged=epoch!=priorEpoch; priorEpoch=epoch;
+    const bool permitted=!stopping.load() && !shutdownReset.load() && !MenuVisible() &&
+        !visibilityChanged && targetWindow && GetForegroundWindow()==targetWindow;
+    const auto now=GetTickCount64();
+    for (auto& binding:flameLoops) {
+        if (!binding.weapon) continue;
+        if (!FlameLoopOwner(binding)) { binding={}; flameDiscoveryAttempts=30; continue; }
+        uint32_t frame=0; double time=0;
+        const bool sameWorld=FlameLoopWorld(binding.world) && ActorStillCurrent(binding.actor,binding.actorHandle);
+        if (!sameWorld && !binding.retired) { binding.retired=true; flameDiscoveryAttempts=30; }
+        const bool selected=!binding.retired && sameWorld && FlameLoopSelected(binding);
+        const bool sampled=ReadAt(binding.weapon,0x1ac,frame) && ReadAt(binding.weapon,0x198,time);
+        const bool wasActive=binding.gate.active;
+        const bool playing=binding.gate.Observe(permitted && selected && sampled,frame,time,now);
+        if (!playing) killed+=StopFlameLoop(binding);
+        if (playing!=wasActive) Log(std::string("M2 loop: ")+(playing?"active":"stopped")+
+            " native_shot_frame="+std::to_string(frame));
+        active|=playing;
+    }
+    if (killed) Log("M2 loop: private_fx_kill_count="+std::to_string(killed));
+    flame_audio::Update(active);
+    static const char* lastAudio=nullptr; static unsigned lastError=0;
+    const auto audio=flame_audio::Status(); const auto error=flame_audio::LastError();
+    if (audio!=lastAudio || error!=lastError) {
+        lastAudio=audio; lastError=error;
+        Log(std::string("M2 audio: ")+audio+" error="+std::to_string(error));
+    }
 }
 bool AssignFlameHeldSlot(uintptr_t actor,uint32_t handle,const ReloadState& admitted,std::wstring& status) {
     status=L"M2 inventory request completed, but held-slot assignment could not be verified.";
@@ -823,6 +1325,14 @@ bool AssignFlameHeldSlot(uintptr_t actor,uint32_t handle,const ReloadState& admi
 bool EquipFlamethrower(uintptr_t actor,uint32_t handle,const ReloadState& captured,std::wstring& status) {
     status=L"M2 flamethrower requires the original Mary Jane and a ready loaded mission or world.";
     if (!EngineContextReady() || !captured.ready) return false;
+    if (!flameLoopCodeReady || !FlameLoopCode()) {
+        status=L"M2 flame loop cleanup is unavailable on this build; equipment request refused.";
+        return false;
+    }
+    if (!ReserveFlameLoopSlot(actor,handle)) {
+        status=L"M2 flame cleanup monitors are occupied by live guns; equipment request refused.";
+        return false;
+    }
     const auto world=ReadReloadState();
     uintptr_t system=0;
     if (!world.ready || !SameReloadContext(world.token,captured.token) || !FlameLoadoutReady(actor,handle,system) ||
@@ -850,7 +1360,89 @@ bool EquipFlamethrower(uintptr_t actor,uint32_t handle,const ReloadState& captur
     Log("M2 flame: tank accessory equipped_inventory_verified="+std::to_string(tanks)+
         "; visible model requires native skin streaming.");
     status+=tanks ? L" Tank backpack equipped." : L" Tank backpack equip not yet confirmed.";
+    if (assigned) {
+        flameDiscoveryAttempts=30;
+        FlameInventoryState inventory;
+        const bool armed=afterWorld.ready && SameReloadContext(finalWorld.token,afterWorld.token) &&
+            ReadFlameInventory(actor,handle,inventory) && ArmFlameLoop(actor,handle,afterWorld,inventory);
+        if (!armed) status+=L" Flame feedback is waiting for the native held weapon to finish loading.";
+    }
     return assigned;
+}
+bool SwitchMJWeapon(uintptr_t actor,uint32_t handle,const ReloadState& captured,
+                    uint16_t capturedItem,std::wstring& status) {
+    status=L"Switching requires Mary Jane, a ready world, and owned M2 and Sonic Shotgun weapons.";
+    if (!EngineContextReady() || !captured.ready || !capturedItem || !flameLoopCodeReady ||
+        !FlameLoopCode() || !FlameSlotCode()) return false;
+    uintptr_t system=0;
+    const auto world=ReadReloadState();
+    if (!world.ready || !SameReloadContext(captured.token,world.token) ||
+        !FlameLoadoutReady(actor,handle,system)) return false;
+    MJWeaponPair before;
+    if (!ReadMJWeaponPair(actor,handle,before)) return false;
+    const auto target=mj_weapon_switch::Plan(before.m2.contract,before.sonic.contract,
+        before.m2.slots,before.selected,capturedItem);
+    if (target==mj_weapon_switch::Target::None) {
+        status=L"The selected weapon changed after this command was chosen; switch discarded.";
+        return false;
+    }
+    const bool toM2=target==mj_weapon_switch::Target::M2;
+    if (toM2 && !ReserveFlameLoopSlot(actor,handle)) {
+        status=L"M2 flame cleanup monitors are occupied; switch refused.";return false;
+    }
+    // Stop this hero's private feedback before selecting another held weapon.
+    // Keep the identity monitor alive to catch late asynchronous FX creation.
+    unsigned killed=0;
+    for (auto& binding:flameLoops) {
+        if (binding.actor!=actor || binding.actorHandle!=handle) continue;
+        binding.gate.Observe(false,0,0,GetTickCount64());
+        killed+=StopFlameLoop(binding);
+    }
+    flame_audio::Update(false);
+    // Cleanup enters the native FX system, so recapture the world and both
+    // items after it, immediately before the native slot mutator.
+    MJWeaponPair final;
+    const auto finalWorld=ReadReloadState();
+    if (!finalWorld.ready || !SameReloadContext(world.token,finalWorld.token) ||
+        !ReadMJWeaponPair(actor,handle,final) || !SameMJWeapon(before.m2,final.m2) ||
+        !SameMJWeapon(before.sonic,final.sonic) || before.m2.slots.items!=final.m2.slots.items ||
+        before.m2.slots.selected!=final.m2.slots.selected ||
+        mj_weapon_switch::Plan(final.m2.contract,final.sonic.contract,final.m2.slots,final.selected,capturedItem)!=target ||
+        !ActorStillCurrent(actor,handle) || !EngineContextReady()) {
+        status=L"Weapon or world changed before assignment; switch discarded.";return false;
+    }
+    const auto& destination=toM2 ? final.m2 : final.sonic;
+    flame_slot::Options options;
+    // Pinned native replacement/select changes only the existing held slot.
+    // There is deliberately no loadout application, grant or inventory clear.
+    const bool accepted=reinterpret_cast<bool (*)(void*,void*,const flame_slot::Options*)>(g.base+0x14aeda0)(
+        reinterpret_cast<void*>(destination.inventory),reinterpret_cast<void*>(destination.item),&options);
+    FlameInventoryState afterM2,afterSonic;
+    const auto afterWorld=ReadReloadState();
+    const bool observed=afterWorld.ready && SameReloadContext(world.token,afterWorld.token) &&
+        ReadOwnedMJWeapon(actor,handle,mj_weapon_switch::M2,afterM2) &&
+        ReadOwnedMJWeapon(actor,handle,mj_weapon_switch::Sonic,afterSonic) &&
+        SameMJWeapon(before.m2,afterM2) && SameMJWeapon(before.sonic,afterSonic) &&
+        afterM2.slots.items==afterSonic.slots.items && afterM2.slots.selected==afterSonic.slots.selected;
+    const bool assigned=observed && mj_weapon_switch::Preserved(before.m2.contract,before.sonic.contract,
+        afterM2.contract,afterSonic.contract,before.m2.slots,afterM2.slots,target);
+    const bool selected=assigned && MJWeaponSelected(actor,handle,toM2 ? afterM2 : afterSonic,
+        toM2 ? mj_weapon_switch::M2 : mj_weapon_switch::Sonic);
+    Log("MJ weapon switch: target="+std::string(toM2 ? "M2" : "SonicShotgun")+
+        " from_item="+std::to_string(before.selected)+" to_item="+std::to_string(destination.contract.id)+
+        " native_return="+std::to_string(accepted)+" inventory_preserved="+std::to_string(assigned)+
+        " selected_weapon_verified="+std::to_string(selected)+" private_fx_kill_count="+std::to_string(killed));
+    if (!assigned) {
+        status=L"Native weapon switch was not confirmed; mission scripts may restrict equipment.";return false;
+    }
+    status=selected ? (toM2 ? L"Switched to M2 flamethrower." : L"Switched to Sonic Shotgun.") :
+        L"Weapon assigned to the gun slot; waiting for the native held weapon.";
+    if (toM2) {
+        flameDiscoveryAttempts=30;
+        if (!selected || !ArmFlameLoop(actor,handle,afterWorld,afterM2))
+            status+=L" Flame feedback is waiting for the native held weapon to finish loading.";
+    }
+    return true;
 }
 void RestoreHealth(uintptr_t component, uint32_t handle) {
     autoHeal = false;
@@ -928,7 +1520,7 @@ void ExportDiagnostics() {
     std::ofstream f(path, std::ios::trunc);
     if (!f) { Status(L"Could not write diagnostics.json."); return; }
     f << std::boolalpha << std::setprecision(7)
-      << "{\n  \"menu_version\": \"2.9.4\",\n  \"preview\": " << previewMode
+      << "{\n  \"menu_version\": \"2.10.0\",\n  \"preview\": " << previewMode
       << ",\n  \"input_capture_installed\": " << capture.installed
       << ",\n  \"input_capture_imports\": " << capture.patchedImports
       << ",\n  \"input_capture_sony_sdk_installed\": " << capture.sonySdkInstalled
@@ -950,6 +1542,7 @@ void ExportDiagnostics() {
       << ",\n  \"health_available\": " << s.healthReady
       << ",\n  \"teleport_available\": " << s.teleportReady
       << ",\n  \"mj_flamethrower_equip_available\": " << s.mjFlamethrowerReady
+      << ",\n  \"mj_weapon_switch_available\": " << s.mjWeaponSwitchReady
       << ",\n  \"reload_available\": " << s.reload.ready
       << ",\n  \"exit_frontend_available\": " << s.reload.frontendReady
       << ",\n  \"primary_objective_completion_available\": " << s.primary.ready
@@ -1084,11 +1677,37 @@ void RunCommands(uintptr_t actor, uint32_t handle, uintptr_t health, float maxim
             Status(L"Hero changed after this command was selected; command discarded."); continue;
         }
         switch (c.action) {
+        case Action::HeroWarp: {
+            std::wstring result;
+            const bool handled = ExecuteHeroWarp(c.heroWarp, c.warpPosition, result);
+            Status(result);
+            Log(handled ? "HeroWarp: native event handled." : "HeroWarp: request not handled; see status.");
+            // Synchronous event handlers can change the hero/world even if no
+            // final handler accepts the event. Never reuse this tick's pointers.
+            InvalidateMenuSnapshot();
+            if (handled) QueueMenuInput(MenuInput::Close);
+            return;
+        }
+        case Action::SetHeroScale:
+            Status(SetHeroScale(actor, handle, c.value) ? L"Hero scale applied. Reset scale restores this hero's original scale." :
+                L"Hero scale request rejected; current actor, scale or engine context is unavailable.");
+            break;
+        case Action::ResetHeroScale:
+            Status(RestoreHeroScale(actor, handle) ? L"Owned hero scale restored." :
+                L"Hero scale changed elsewhere; no earlier scale was written.");
+            break;
         case Action::EquipMJFlamethrower: {
             std::wstring result;
             const bool accepted=EquipFlamethrower(actor,handle,c.reload,result);
             Status(result);
             Log(accepted?"M2 flame: held-slot assignment confirmed.":"M2 flame: held-slot assignment not confirmed; see status.");
+            break;
+        }
+        case Action::SwitchMJWeapon: {
+            std::wstring result;
+            const bool accepted=SwitchMJWeapon(actor,handle,c.reload,c.mjWeaponSelectedItem,result);
+            Status(result);
+            Log(accepted ? "MJ weapon switch: held slot confirmed." : "MJ weapon switch: request not confirmed; see status.");
             break;
         }
         case Action::CameraShake: {
@@ -1115,10 +1734,10 @@ void RunCommands(uintptr_t actor, uint32_t handle, uintptr_t health, float maxim
                 (outcome.invoked ? "ReplayMission: invoked but not accepted; instance records discarded." : "ReplayMission: request rejected before invocation."));
             if (outcome.invoked) {
                 QueueMenuInput(MenuInput::Close);
-                autoHeal = false; healthEdit = {}; savedPosition = {}; undoPosition = {};
+                autoHeal = false; healthEdit = {}; heroScaleEdit = {}; savedPosition = {}; undoPosition = {};
                 std::lock_guard lock(stateMutex);
                 state.autoHeal = state.savedPosition = state.undoPosition = false;
-                state.heroReady = state.healthReady = state.teleportReady = false;
+                state.heroReady = state.healthReady = state.teleportReady = state.heroScaleReady = state.heroScaleOwned = false;
                 state.actorHandle = 0; state.characterNames.clear(); state.primary = {}; state.reload = {};
                 state.actorSave = {}; state.replay = {}; state.reloadOptions = {}; state.cameraDebug = {}; state.reloadSelection = {};
             }
@@ -1132,10 +1751,10 @@ void RunCommands(uintptr_t actor, uint32_t handle, uintptr_t health, float maxim
             if (accepted) {
                 // Objective scripts can transition levels or replace the hero.
                 // Discard instance records without reading old engine objects.
-                autoHeal = false; healthEdit = {}; savedPosition = {}; undoPosition = {};
+                autoHeal = false; healthEdit = {}; heroScaleEdit = {}; savedPosition = {}; undoPosition = {};
                 std::lock_guard lock(stateMutex);
                 state.autoHeal = state.savedPosition = state.undoPosition = false;
-                state.heroReady = state.healthReady = state.teleportReady = false;
+                state.heroReady = state.healthReady = state.teleportReady = state.heroScaleReady = state.heroScaleOwned = false;
                 state.actorHandle = 0; state.characterNames.clear(); state.primary = {}; state.reload = {}; state.actorSave = {}; state.replay = {}; state.reloadOptions = {}; state.cameraDebug = {}; state.reloadSelection = {};
             }
             return;
@@ -1181,10 +1800,10 @@ void RunCommands(uintptr_t actor, uint32_t handle, uintptr_t health, float maxim
                 QueueMenuInput(MenuInput::Close);
                 // A native transition can destroy the actor immediately. Drop
                 // per-instance state without touching its memory after the call.
-                autoHeal = false; healthEdit = {}; savedPosition = {}; undoPosition = {};
+                autoHeal = false; healthEdit = {}; heroScaleEdit = {}; savedPosition = {}; undoPosition = {};
                 std::lock_guard lock(stateMutex);
                 state.autoHeal = state.savedPosition = state.undoPosition = false;
-                state.heroReady = state.healthReady = state.teleportReady = false;
+                state.heroReady = state.healthReady = state.teleportReady = state.heroScaleReady = state.heroScaleOwned = false;
                 state.actorHandle = 0; state.characterNames.clear(); state.reload = {}; state.primary = {}; state.actorSave = {}; state.replay = {}; state.reloadOptions = {}; state.cameraDebug = {}; state.reloadSelection = {};
             }
             return;
@@ -1272,6 +1891,7 @@ void RunCommands(uintptr_t actor, uint32_t handle, uintptr_t health, float maxim
                 Status(L"Character list changed after selection; command discarded."); break;
             }
             RestoreHealth(health, handle);
+            RestoreHeroScale(actor, handle);
             savedPosition = {}; undoPosition = {};
             if (!EngineContextReady()) { RejectNativeAction(c.action); break; }
             g.switchCharacter(reinterpret_cast<void*>(manager), NameCRC(names[index].c_str()), 4, nullptr);
@@ -1282,7 +1902,11 @@ void RunCommands(uintptr_t actor, uint32_t handle, uintptr_t health, float maxim
         case Action::Borderless: case Action::RestoreWindow: case Action::ExportDiagnostics: case Action::CopyReloadData:
             RunWindowCommand(c); break;
         case Action::ResetAll:
-            RestoreHealth(health, handle); RestoreHealthFlags();
+            if (EngineContextReady() && flameBurnReady.load()) {
+                flameBurnWorldLive=false;++flameBurnWorldSerial;
+                flame_burn::EngineTick(nullptr,0);
+            }
+            RestoreHealth(health, handle); RestoreHealthFlags(); RestoreHeroScale(actor, handle);
             settingsRestorePending = !RestoreMenuRuntimeOverrides(); savedPosition = {}; undoPosition = {};
             Status(L"Menu overrides reset; saved positions cleared.");
             if (shutdownReset.load() && !settingsRestorePending) shutdownResetComplete.store(true);
@@ -1333,28 +1957,39 @@ void GameTick() {
     if (autoHeal && current > 0 && current < maximum && ActorStillCurrent(actor, handle)) SetCurrentHealth(health, maximum);
     Vec3 p{};
     bool position = actor && GetPosition(actor, handle, p);
+    uintptr_t scaleTransform = 0;
+    Vec3 scale{};
+    const bool scaleReady = refreshMenu && actor && ReadHeroScale(actor, handle, scaleTransform, scale);
     uintptr_t manager = 0;
     auto names = refreshMenu && actor ? Characters(actor, handle, manager) : std::vector<std::string>{};
     if (actor && !ActorStillCurrent(actor, handle)) {
         actor = health = 0; handle = 0; hasHealth = position = autoHeal = false;
         maximum = current = 0; p = {}; names.clear();
     }
+    DiscoverFlameLoop(actor,handle,menuVisible);
     ReloadState reload;
     PrimaryObjectiveState primary;
     ActorSaveState actorSave;
     ReloadOptionsState reloadOptions;
     CameraDebugState cameraDebug;
     ReloadSelectionState reloadSelection;
+    HeroWarpState heroWarp;
     ReplayState replay;
-    bool flameReady = false;
+    bool flameReady = false,weaponSwitchReady=false;
+    uint16_t weaponSelectedItem=0;
     if (refreshMenu) {
         reload = ReadReloadState();
+        heroWarp = ReadHeroWarpState(reload, actor ? handle : 0);
         primary = ReadPrimaryObjectiveState(reload);
         actorSave = ReadActorSaveState(reload);
         reloadOptions = ReadReloadOptionsState(reload);
         cameraDebug = ReadCameraDebugState(reload);
         uintptr_t flameSystem = 0;
         flameReady = reload.ready && FlameLoadoutReady(actor, handle, flameSystem);
+        MJWeaponPair weapons;
+        weaponSwitchReady=flameReady && flameLoopCodeReady && FlameSlotCode() &&
+            ReadMJWeaponPair(actor,handle,weapons,false);
+        if (weaponSwitchReady) weaponSelectedItem=weapons.selected;
         ReplaySelection replaySelection;
         ReloadMissionSelection missionSelection;
         { std::lock_guard lock(stateMutex); replaySelection = desiredReplaySelection; missionSelection = desiredReloadMissionSelection; }
@@ -1389,7 +2024,14 @@ void GameTick() {
             state.reloadOptions = std::move(reloadOptions);
             state.cameraDebug = std::move(cameraDebug);
             state.reloadSelection = std::move(reloadSelection);
+            state.heroWarp = std::move(heroWarp);
             state.mjFlamethrowerReady = flameReady;
+            state.mjWeaponSwitchReady = weaponSwitchReady;
+            state.mjWeaponSelectedItem = weaponSelectedItem;
+            state.heroScaleReady = scaleReady && actor != 0;
+            state.heroScaleOwned = scaleReady && actor == heroScaleEdit.actor && handle == heroScaleEdit.handle &&
+                scaleTransform == heroScaleEdit.transform && ScaleMatches(scale, heroScaleEdit.applied);
+            state.heroScale = scaleReady ? scale.x : 1.0f;
             if (menuVisible && MenuVisible() && snapshotGeneration == menuSnapshotGeneration)
                 completedSnapshotGeneration = snapshotGeneration;
         }
@@ -1423,6 +2065,10 @@ void EngineFrame() noexcept {
     if (!IsWithinVerifiedEngineCallback()) return;
     engineOwnsSimulation.store(true);
     try {
+        {
+            std::unique_lock loopLock(simulationMutex,std::try_to_lock);
+            if (loopLock.owns_lock()) { TickHeroScale(); TickFlameLoops(); TickFlameBurn(); }
+        }
         static uint64_t nextTick = 0;
         const auto now = GetTickCount64();
         if (now < nextTick && !shutdownReset.load() && !settingsRestorePending.load()) return;
@@ -1436,6 +2082,8 @@ void EngineFrame() noexcept {
 }
 
 LRESULT CALLBACK GameWindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam) {
+    if (message == WM_CHAR && MenuVisible() && wParam <= 0xffff)
+        QueueMenuText(static_cast<wchar_t>(wParam));
     LRESULT captured = 0;
     if (input_capture::HandleWindowMessage(window, message, wParam, lParam, previousProc, captured)) return captured;
     if (message == tickMessage && wParam == reinterpret_cast<WPARAM>(selfModule)) {
@@ -1519,6 +2167,11 @@ void InitializeBackend(HMODULE module, bool preview) {
             if (supported) state.status = L"Press PS or F10 in the game to open the debug overlay.";
         }
         if (supported) {
+            flameLoopCodeReady=FlameLoopCode();
+            if (flameLoopCodeReady) {
+                const bool audio=flame_audio::Initialize(module,101);
+                Log(std::string("M2 loop cleanup verified; audio worker ")+(audio?"started":"unavailable")+".");
+            } else Log("M2 loop cleanup signature refused; M2 equipment action disabled.");
             InitializeDebugSettings(module);
             InitializeReloadRuntime(GetModuleHandleW(nullptr), true);
             InitializePrimaryObjectiveRuntime(GetModuleHandleW(nullptr), true);
@@ -1527,6 +2180,7 @@ void InitializeBackend(HMODULE module, bool preview) {
             InitializeReloadOptionsRuntime(GetModuleHandleW(nullptr), true);
             InitializeCameraDebugRuntime(GetModuleHandleW(nullptr), true);
             InitializeReloadSelectionRuntime(GetModuleHandleW(nullptr), true);
+            InitializeHeroWarpRuntime(GetModuleHandleW(nullptr), true);
             InitializeEngineDispatch(module, nullptr);
         }
     }
@@ -1535,6 +2189,18 @@ void InitializeBackend(HMODULE module, bool preview) {
 }
 
 void TickBackend() {
+    static bool burnInitializationAttempted=false;
+    if (!previewMode && !burnInitializationAttempted && g.base && flameLoopCodeReady &&
+        GetEngineDispatchObservation().contextReady) {
+        burnInitializationAttempted=true;
+        const flame_burn::Host host{ReadBytes,BurnActor,FlameComponentHandle,BurnFind,BurnSourceValid,EngineContextReady};
+        const bool ready=flame_burn::Initialize(g.base,g.size,host);
+        flameBurnReady.store(ready,std::memory_order_release);
+        Log(std::string("M2 accepted-hit burn ")+(ready ? "callback ready." : "unavailable: ")+
+            (ready ? "" : flame_burn::LastFailure()));
+    }
+    if (MenuVisible() || shutdownReset.load() || stopping.load() || !targetWindow || GetForegroundWindow()!=targetWindow)
+        flame_audio::Update(false);
     if (!previewMode && !dispatchRegistrationAttempted.load() && GetEngineDispatchObservation().contextReady) {
         dispatchRegistrationAttempted.store(true);
         uint64_t token = 0;
@@ -1621,6 +2287,8 @@ void TickBackend() {
     }
 }
 void InvalidateMenuSnapshot() {
+    flameGateEpoch.fetch_add(1);
+    flame_audio::Update(false);
     std::lock_guard lock(stateMutex);
     if (!++menuSnapshotGeneration) ++menuSnapshotGeneration;
 }
@@ -1629,7 +2297,11 @@ Snapshot GetSnapshot() {
     auto result = state;
     if (!previewMode && (!MenuVisible() || completedSnapshotGeneration != menuSnapshotGeneration)) {
         result.heroReady = result.healthReady = result.teleportReady = result.healthFlagsReady = false;
+        result.heroScaleReady = result.heroScaleOwned = false;
+        result.heroWarp.ready = false;
         result.mjFlamethrowerReady = false;
+        result.mjWeaponSwitchReady = false;
+        result.mjWeaponSelectedItem = 0;
         result.reload.ready = result.reload.frontendReady = result.reload.lobbyReady = false;
         result.primary.ready = result.actorSave.ready = result.replay.ready = false;
         result.reloadOptions.ready = result.cameraDebug.ready = result.reloadSelection.ready = false;
@@ -1642,18 +2314,39 @@ void SubmitAction(Action action, float value) {
     if (stopping || shutdownReset.load()) return;
     if (action == Action::ReloadCheckpoint || action == Action::ExitFrontend || action == Action::CopyReloadData ||
         action == Action::CompletePrimary || action == Action::FullReload || action == Action::ReplayMission ||
-        action == Action::SetNewGamePlus || action == Action::ExitLobby || action == Action::CameraShake) return;
+        action == Action::SetNewGamePlus || action == Action::ExitLobby || action == Action::CameraShake || action == Action::HeroWarp) return;
     if (action == Action::ExportDiagnostics && !targetWindow) { ExportDiagnostics(); return; }
     const auto snapshot = GetSnapshot();
+    if ((action == Action::SetHeroScale || action == Action::ResetHeroScale) &&
+        (!snapshot.heroReady || !snapshot.heroScaleReady || !snapshot.engineActionsReady || previewMode)) return;
+    if (action == Action::SetHeroScale && (!std::isfinite(value) || value < 0.1f || value > 10.0f)) return;
+    if (action==Action::SwitchMJWeapon && !snapshot.mjWeaponSwitchReady) return;
     std::wstring choice;
     if (action == Action::SwitchCharacter && std::isfinite(value) && value >= 0 && value < snapshot.characterNames.size())
         choice = snapshot.characterNames[static_cast<size_t>(value)];
     std::lock_guard lock(commandMutex);
     if (commands.size() < 30) {
         Command command{action, value, {}, snapshot.actorHandle, std::move(choice)};
-        if (action==Action::EquipMJFlamethrower) command.reload=snapshot.reload;
+        if (action==Action::EquipMJFlamethrower || action==Action::SwitchMJWeapon) command.reload=snapshot.reload;
+        if (action==Action::SwitchMJWeapon) command.mjWeaponSelectedItem=snapshot.mjWeaponSelectedItem;
         commands.push_back(std::move(command));
         if (action == Action::ResetAll) commands.push_back({Action::RestoreWindow, 0});
+    }
+}
+void SubmitHeroWarp(const HeroWarpState& captured, const HeroWarpPosition& position) {
+    if (stopping || shutdownReset.load() || previewMode || !captured.ready || !captured.supported ||
+        !captured.actorHandle || !std::isfinite(position.x) || !std::isfinite(position.y) || !std::isfinite(position.z) ||
+        std::fabs(position.x) >= 100000.0f || std::fabs(position.y) >= 100000.0f || std::fabs(position.z) >= 100000.0f) return;
+    const auto snapshot = GetSnapshot();
+    if (!snapshot.engineActionsReady || !snapshot.heroReady || snapshot.actorHandle != captured.actorHandle ||
+        !SameHeroWarpContext(captured, snapshot.heroWarp)) return;
+    std::lock_guard lock(commandMutex);
+    if (commands.size() < 30) {
+        Command command{Action::HeroWarp, 0};
+        command.actorHandle = captured.actorHandle;
+        command.heroWarp = captured;
+        command.warpPosition = position;
+        commands.push_back(std::move(command));
     }
 }
 void SubmitDebugSetting(const std::string& id, int direction) {
@@ -1793,9 +2486,11 @@ void SubmitReloadMissionSelection(const ReloadMissionSelection& selection) {
     std::lock_guard lock(stateMutex);desiredReloadMissionSelection=selection;
 }
 void ShutdownBackend() {
+    shutdownReset.store(true);
+    flame_burn::RequestStop();
+    flame_audio::Update(false);
     photo_gate::Shutdown();
     input_capture::Shutdown();
-    shutdownReset.store(true);
     shutdownResetComplete.store(false);
     {
         std::lock_guard lock(commandMutex);
@@ -1822,12 +2517,15 @@ void ShutdownBackend() {
     }
     if (dispatchToken.load()) {
         const auto deadline = GetTickCount64() + 2000;
-        while (!shutdownResetComplete.load() && GetTickCount64() < deadline) Sleep(5);
+        while ((!shutdownResetComplete.load() || !flameBurnDrained.load()) && GetTickCount64() < deadline) Sleep(5);
         if (!shutdownResetComplete.load()) Log("Engine reset did not finish before shutdown; no window-thread native fallback was attempted.");
+        if (!flameBurnDrained.load()) Log("M2 burn cleanup remains actor-owned; callback detached and module pinned. No off-thread component removal attempted.");
         UnregisterEngineDispatchCallback(dispatchToken.load(), 2000);
         dispatchToken.store(0);
     }
     stopping = true;
+    if (!flame_burn::Quiescent(1000)) Log("M2 burn shutdown incomplete; its pinned module and adapter remain mapped until process exit.");
+    if (!flame_audio::Shutdown(1000)) Log("M2 audio worker shutdown pending; worker retains its module reference.");
     if (!previewMode) ShutdownEngineDispatch();
     Log("Menu shut down.");
 }
