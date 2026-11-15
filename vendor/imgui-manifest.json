@@ -1,0 +1,7 @@
+﻿{
+    "version":  "v1.91.9b",
+    "source":  "https://github.com/ocornut/imgui/archive/refs/tags/v1.91.9b.zip",
+    "sha256":  "FD37507C8476A6D14CC7C4B352401F31BCBD0F0D995D35390811E968C466F46E",
+    "license":  "MIT",
+    "local_source":  "vendor/imgui"
+}
